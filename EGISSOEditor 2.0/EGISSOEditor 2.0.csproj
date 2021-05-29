@@ -212,6 +212,10 @@
     <Compile Include="Infrastuctures\Convertors\Base\MultiConvertor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ViewModels\Base\ViewModel.cs" />
+    <Page Include="Resources\Styles\Brushes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -251,13 +255,44 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Resources\Icons\Thumbs.db" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Add_file.png" />
+    <Resource Include="Resources\Icons\Back.ico" />
+    <Resource Include="Resources\Icons\Close_file.png" />
+    <Resource Include="Resources\Icons\Close_files_all.png" />
+    <Resource Include="Resources\Icons\Combine_Files.png" />
+    <Resource Include="Resources\Icons\Combine_files_2.png" />
+    <Resource Include="Resources\Icons\delete-file.ico" />
+    <Resource Include="Resources\Icons\delete_all.ico" />
+    <Resource Include="Resources\Icons\edit-validated.ico" />
+    <Resource Include="Resources\Icons\Edit_file.png" />
+    <Resource Include="Resources\Icons\excel.ico" />
+    <Resource Include="Resources\Icons\file-complete.ico" />
+    <Resource Include="Resources\Icons\file-info.ico" />
+    <Resource Include="Resources\Icons\file-warning.ico" />
+    <Resource Include="Resources\Icons\File.ico" />
+    <Resource Include="Resources\Icons\File_Excel.png" />
+    <Resource Include="Resources\Icons\Folder.ico" />
+    <Resource Include="Resources\Icons\new-file.ico" />
+    <Resource Include="Resources\Icons\ProgrammIC0.png" />
+    <Resource Include="Resources\Icons\ProgrammICO.ico" />
+    <Resource Include="Resources\Icons\ProgrammICO2.png" />
+    <Resource Include="Resources\Icons\Progress.png" />
+    <Resource Include="Resources\Icons\Save_2.png" />
+    <Resource Include="Resources\Icons\Save_all_2.png" />
+    <Resource Include="Resources\Icons\Save_As_2.png" />
+    <Resource Include="Resources\Icons\search-file.ico" />
+    <Resource Include="Resources\Icons\Search_file.png" />
+    <Resource Include="Resources\Icons\SNILS_Correct.png" />
+    <Resource Include="Resources\Icons\trash.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

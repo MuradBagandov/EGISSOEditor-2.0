@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:EGISSOEditor_2._0.Resources.Styles">
+    
+    <SolidColorBrush x:Key="SolidBrush_Transporent" Color="Transparent"/>
+    <SolidColorBrush x:Key="SolidBrush_White" Color="White"/>
+    <SolidColorBrush x:Key="SolidBrush_WhiteSmoke" Color="WhiteSmoke"/>
+    <SolidColorBrush x:Key="SolidBrush_AntiqueWhite" Color="AntiqueWhite"/>
+    <SolidColorBrush x:Key="SolidBrush_Black" Color="Black"/>
+    <SolidColorBrush x:Key="SolidBrush_Red" Color="Red"/>
+    <SolidColorBrush x:Key="SolidBrush_LightRed" Color="#FA5858"/>
+    <SolidColorBrush x:Key="SolidBrush_Blue" Color="Blue"/>
+    <SolidColorBrush x:Key="SolidBrush_LightBlue" Color="#3399ff"/>
+    <SolidColorBrush x:Key="SolidBrush_Green" Color="Green"/>
+    <SolidColorBrush x:Key="SolidBrush_LightOrange" Color="#FE9A2E"/>
+    <SolidColorBrush x:Key="SolidBrush_DarkOrange" Color="DarkOrange"/>
+    <SolidColorBrush x:Key="SolidBrush_HighLightGray" Color="#ababab"/>
+    <SolidColorBrush x:Key="SolidBrush_LightGray" Color="#808080"/>
+    <SolidColorBrush x:Key="SolidBrush_Gray" Color="#505050"/>
+    <SolidColorBrush x:Key="SolidBrush_MiddleDarkGray" Color="#404040"/>
+    <SolidColorBrush x:Key="SolidBrush_DarkGray" Color="#303030"/>
+    <SolidColorBrush x:Key="SolidBrush_HighDarkGray" Color="#252525"/>
+    
+</ResourceDictionary>

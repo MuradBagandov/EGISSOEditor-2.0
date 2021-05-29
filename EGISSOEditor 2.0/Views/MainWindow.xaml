@@ -3,11 +3,57 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:local="clr-namespace:EGISSOEditor_2._0"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowModel,Source={StaticResource Locator}}"
         Title="{Binding Title}" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Style.Setters>
+                        <Setter Property="Background" Value="{StaticResource SolidBrush_White}"/>
+                        <Setter Property="Padding" Value="2,0"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Margin" Value="2,0"/>
+                    </Style.Setters>
+                </Style>
+                <Style TargetType="Image">
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+            </StackPanel.Resources>
+            <Button>
+                <Image Source="../Resources/Icons/Add_file.png"/>
+            </Button>
+            <Button>
+                <Image Source="../Resources/Icons/Save_2.png"/>
+            </Button>
+            <Button>
+                <Image Source="../Resources/Icons/Save_as_2.png"/>
+            </Button>
+            <Button>
+                <Image Source="../Resources/Icons/Save_all_2.png"/>
+            </Button>
+            <Button>
+                <Image Source="../Resources/Icons/close_file.png"/>
+            </Button>
+            <Button>
+                <Image Source="../Resources/Icons/close_files_all.png"/>
+            </Button>
+
+        </StackPanel>
+        <ListBox Grid.Row="1" VerticalContentAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+
     </Grid>
 </Window>
