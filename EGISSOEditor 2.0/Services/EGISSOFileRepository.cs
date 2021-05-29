@@ -18,7 +18,6 @@ namespace EGISSOEditor_2._0.Services
         private static int _id = 0;
 
         private readonly string _directoryTemplate;
-
         public EGISSOFileRepository()
         {
             _directoryTemplate = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\temp";
@@ -33,6 +32,9 @@ namespace EGISSOEditor_2._0.Services
 
             if (_items.Any(i => i.Directory == path))
                 throw new ArgumentException("Данный файл уже добавлен!");
+
+            if (path.IndexOf(_directoryTemplate) != -1)
+                throw new ArgumentException("Данный файл нельзя добавить!");
 
             string name = Path.GetFileName(path);
             string tempPath = _directoryTemplate + "\\" + _id.ToString();
@@ -50,7 +52,6 @@ namespace EGISSOEditor_2._0.Services
 
         public bool Remove(EGISSOFile element)
         {
-
             File.Delete(element.TemplateDirectory);
             return _items.Remove(element);
         }
@@ -65,18 +66,25 @@ namespace EGISSOEditor_2._0.Services
         public void Save(EGISSOFile element)
         {
             File.Copy(element.TemplateDirectory, element.Directory, true);
+            element.IsFileChanged = false;
         }
 
         public void SaveAs(EGISSOFile element, string newDirectory)
         {
-            //if (Path.)
+            if (Items.Any(i => i.Directory == newDirectory || i.TemplateDirectory == newDirectory) || 
+                newDirectory.IndexOf(_directoryTemplate) != -1)
+                throw new ArgumentException($"{newDirectory} не корректный путь или текущий объект уже добален!");
+
             element.Directory = newDirectory;
-            File.Copy(element.TemplateDirectory, newDirectory, true);
+            Save(element);
         }
 
         public void SaveAll()
         {
-            
+            foreach (EGISSOFile item in _items)
+                Save(item);
         }
+
+        
     }
 }
