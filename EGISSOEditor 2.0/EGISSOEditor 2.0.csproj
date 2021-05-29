@@ -210,7 +210,10 @@
     <Compile Include="Infrastuctures\Commands\LambdaCommand.cs" />
     <Compile Include="Infrastuctures\Convertors\Base\Convertor.cs" />
     <Compile Include="Infrastuctures\Convertors\Base\MultiConvertor.cs" />
+    <Compile Include="Models\EGISSOFile.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Services\EGISSOFileRepository.cs" />
+    <Compile Include="Services\Interfaces\IFileRepository.cs" />
     <Compile Include="ViewModels\Base\ViewModel.cs" />
     <Page Include="Resources\Styles\Brushes.xaml">
       <SubType>Designer</SubType>
@@ -260,9 +263,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Icons\Add_file.png" />
     <Resource Include="Resources\Icons\Back.ico" />
