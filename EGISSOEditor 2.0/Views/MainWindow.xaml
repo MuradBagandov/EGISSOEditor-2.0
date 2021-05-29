@@ -4,16 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:EGISSOEditor_2._0"
+        xmlns:model="clr-namespace:EGISSOEditor_2._0.Models"
+        xmlns:controls="clr-namespace:EGISSOEditor_2._0.Controls"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowModel,Source={StaticResource Locator}}"
-        Title="{Binding Title}" Height="450" Width="800">
+        Title="{Binding SelectedFiles, UpdateSourceTrigger=PropertyChanged}" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="1">
             <StackPanel.Resources>
                 <Style TargetType="Button">
                     <Style.Setters>
@@ -27,33 +30,46 @@
                     <Setter Property="Margin" Value="5"/>
                 </Style>
             </StackPanel.Resources>
-            <Button>
+            <Button Command="{Binding AddFileCommand}" ToolTip="Добавить">
                 <Image Source="../Resources/Icons/Add_file.png"/>
             </Button>
-            <Button>
+            <Button Command="{Binding SaveFileCommand}" ToolTip="Сохранить">
                 <Image Source="../Resources/Icons/Save_2.png"/>
             </Button>
-            <Button>
+            <Button Command="{Binding SaveAsFileCommand}" ToolTip="Сохранить как">
                 <Image Source="../Resources/Icons/Save_as_2.png"/>
             </Button>
             <Button>
                 <Image Source="../Resources/Icons/Save_all_2.png"/>
             </Button>
-            <Button>
+            <Button Command="{Binding RemoveFileCommand}" ToolTip="Удалить">
                 <Image Source="../Resources/Icons/close_file.png"/>
             </Button>
-            <Button>
+            <Button Command="{Binding RemoveFilesCommand}" ToolTip="Удалить все">
                 <Image Source="../Resources/Icons/close_files_all.png"/>
             </Button>
 
         </StackPanel>
-        <ListBox Grid.Row="1" VerticalContentAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-        </ListBox>
 
+        <Grid Grid.Row="1" Margin="5">
+            <Grid.Resources>
+                <DataTemplate DataType="{x:Type model:EGISSOFile}">
+                    <StackPanel Width="80">
+                        <Image Source="../Resources/Icons/File_Excel.png" Width="50"/>
+                        <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+            </Grid.Resources>
+
+            <controls:ListBoxCustom VerticalContentAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="lsbs"
+                 ItemsSource="{Binding Files}" SelectionMode="Extended" BindableSelectedItems="{Binding SelectedFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <controls:ListBoxCustom.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </controls:ListBoxCustom.ItemsPanel>
+            </controls:ListBoxCustom>
+            
+        </Grid>
     </Grid>
 </Window>

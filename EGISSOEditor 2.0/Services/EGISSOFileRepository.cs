@@ -5,14 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using EGISSOEditor_2._0.Models;
+using System.Collections.ObjectModel;
 
 namespace EGISSOEditor_2._0.Services
 {
     internal class EGISSOFileRepository : Interfaces.IFileRepository<EGISSOFile>
     {
-        public List<EGISSOFile> Items => _items;
+        public ObservableCollection<EGISSOFile> Items => _items;
 
-        private List<EGISSOFile> _items = new List<EGISSOFile>();
+        private ObservableCollection<EGISSOFile> _items = new ObservableCollection<EGISSOFile>();
 
         private static int _id = 0;
 
@@ -34,7 +35,7 @@ namespace EGISSOEditor_2._0.Services
                 throw new ArgumentException("Данный файл уже добавлен!");
 
             string name = Path.GetFileName(path);
-            string tempPath = _directoryTemplate + _id.ToString();
+            string tempPath = _directoryTemplate + "\\" + _id.ToString();
 
             if (File.Exists(tempPath))
             {
@@ -68,7 +69,9 @@ namespace EGISSOEditor_2._0.Services
 
         public void SaveAs(EGISSOFile element, string newDirectory)
         {
-            throw new NotImplementedException();
+            //if (Path.)
+            element.Directory = newDirectory;
+            File.Copy(element.TemplateDirectory, newDirectory, true);
         }
 
         public void SaveAll()

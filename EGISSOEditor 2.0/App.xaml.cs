@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-//using EGISSOEditor_2._0.Services.Interfaces;
-//using EGISSOEditor_2._0.Services;
+using EGISSOEditor_2._0.Services.Interfaces;
+using EGISSOEditor_2._0.Services;
 using EGISSOEditor_2._0.ViewModels;
+using EGISSOEditor_2._0.Models;
 using System.Windows.Controls;
 
 namespace EGISSOEditor_2._0
@@ -52,10 +53,8 @@ namespace EGISSOEditor_2._0
 
         internal static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
         {
-            //services.AddSingleton<ITitleParser, RanobelibTitleParser>();
-            //services.AddSingleton<IUserDialog, UserDialog>();
             services.AddSingleton<MainWindowViewModel>();
-            //services.AddSingleton<TitleViewModel>();
+            services.AddSingleton<IFileRepository<EGISSOFile>, EGISSOFileRepository>();
         }
 
         public static string GetSourceCodePath([CallerFilePath] string path = null) => path;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace EGISSOEditor_2._0.Services.Interfaces
 {
     internal interface IFileRepository<T> where T: class
     {
-        List<T> Items { get; }
+        ObservableCollection<T> Items { get; }
 
         bool Add(string path);
 
