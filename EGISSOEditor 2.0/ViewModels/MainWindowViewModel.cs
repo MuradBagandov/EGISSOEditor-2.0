@@ -63,7 +63,7 @@ namespace EGISSOEditor_2._0.ViewModels
                         MessageBox.Show(ex.Message, "EGISSOEditor", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                OnPropertyChanged("Files");
+                OnPropertyChanged(nameof(Files));
             }
         }
 
@@ -143,6 +143,7 @@ namespace EGISSOEditor_2._0.ViewModels
                     MessageBox.Show(ex.Message, "EGISSOEditor", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+           // OnPropertyChanged(nameof(Files));
         }
 
         #endregion

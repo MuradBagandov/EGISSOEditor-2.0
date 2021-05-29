@@ -62,7 +62,7 @@
             </Grid.Resources>
 
             <controls:ListBoxCustom VerticalContentAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="lsbs"
-                 ItemsSource="{Binding Files}" SelectionMode="Extended" BindableSelectedItems="{Binding SelectedFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                 ItemsSource="{Binding Files, UpdateSourceTrigger=PropertyChanged}" SelectionMode="Extended" BindableSelectedItems="{Binding SelectedFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                 <controls:ListBoxCustom.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>

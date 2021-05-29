@@ -36,7 +36,6 @@ namespace EGISSOEditor_2._0.Services
             if (path.IndexOf(_directoryTemplate) != -1)
                 throw new ArgumentException("Данный файл нельзя добавить!");
 
-            string name = Path.GetFileName(path);
             string tempPath = _directoryTemplate + "\\" + _id.ToString();
 
             if (File.Exists(tempPath))
@@ -46,7 +45,7 @@ namespace EGISSOEditor_2._0.Services
             }
 
             File.Copy(path, tempPath);
-            _items.Add(new EGISSOFile(_id++, path, tempPath, name));
+            _items.Add(new EGISSOFile(_id++, path, tempPath));
             return true;
         }
 
