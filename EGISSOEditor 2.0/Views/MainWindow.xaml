@@ -8,6 +8,7 @@
         xmlns:local="clr-namespace:EGISSOEditor_2._0"
         xmlns:model="clr-namespace:EGISSOEditor_2._0.Models"
         xmlns:controls="clr-namespace:EGISSOEditor_2._0.Controls"
+        xmlns:conv="clr-namespace:EGISSOEditor_2._0.Infrastuctures.Convertors"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowModel,Source={StaticResource Locator}}"
         Title="EGISSOEditor" Height="450" Width="800" Closing="Window_Closing">
@@ -16,6 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="1">
             <StackPanel.Resources>
@@ -49,15 +51,23 @@
             <Button Command="{Binding RemoveFilesCommand}" ToolTip="Удалить все">
                 <Image Source="../Resources/Icons/File_remove_all_1.png"/>
             </Button>
-
         </StackPanel>
 
+        <DockPanel Grid.Row="2">
+            <Slider x:Name="slSize" DockPanel.Dock="Right"
+                    Minimum ="60" Maximum="100" Orientation="Horizontal" Width="150" Margin="10,8"/>
+            <Grid/>
+        </DockPanel>
+        
         <Grid Grid.Row="1" Margin="5">
             <Grid.Resources>
+                <conv:Linear B="-20" x:Key="LinearB-20"/>
                 <DataTemplate DataType="{x:Type model:EGISSOFile}">
-                    <StackPanel Width="80">
+                    <StackPanel Width="{Binding Value, ElementName=slSize, UpdateSourceTrigger=PropertyChanged}"
+                                ToolTip="{Binding Directory}">
                         <TextBlock Text="{Binding IsFileChanged}" x:Name="IsFileChanged" Visibility="Collapsed"/>
-                        <Image Width="60">
+                        <Image Width="{Binding Value, ElementName=slSize, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource LinearB-20}}" 
+                               DataContext="{Binding RelativeSource={RelativeSource AncestorType=Grid}}">
                             <Image.Style>
                                 <Style TargetType="{x:Type Image}">
                                     <Style.Triggers>
@@ -71,7 +81,7 @@
                                 </Style>
                             </Image.Style>
                         </Image>
-                        <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center"/>
+                        <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center" MaxHeight="50"/>
                     </StackPanel>
                 </DataTemplate>
             </Grid.Resources>

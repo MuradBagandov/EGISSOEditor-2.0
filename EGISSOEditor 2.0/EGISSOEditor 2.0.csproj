@@ -211,6 +211,7 @@
     <Compile Include="Infrastuctures\Commands\LambdaCommand.cs" />
     <Compile Include="Infrastuctures\Convertors\Base\Convertor.cs" />
     <Compile Include="Infrastuctures\Convertors\Base\MultiConvertor.cs" />
+    <Compile Include="Infrastuctures\Convertors\Linear.cs" />
     <Compile Include="Models\EGISSOFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\EGISSOFileRepository.cs" />
