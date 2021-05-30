@@ -21,21 +21,24 @@ namespace EGISSOEditor_2._0.ViewModels
 
         #region Properties
 
+        #region Files : ObservableCollection<EGISSOFile>
         public ObservableCollection<EGISSOFile> Files
         {
             get => _fileRepository.Items;
-        }
+        } 
+        #endregion
 
+        #region SelectedFiles : ObservableCollection<object>
         private ObservableCollection<object> _selectedFiles;
 
         public ObservableCollection<object> SelectedFiles
         {
             get => _selectedFiles;
             set => Set(ref _selectedFiles, value);
-        }
-
+        } 
         #endregion
 
+        #endregion
 
         #region Commands
 
@@ -63,7 +66,6 @@ namespace EGISSOEditor_2._0.ViewModels
                         MessageBox.Show(ex.Message, "EGISSOEditor", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                OnPropertyChanged(nameof(Files));
             }
         }
 
@@ -73,25 +75,24 @@ namespace EGISSOEditor_2._0.ViewModels
 
         public ICommand RemoveFileCommand { get; set; }
 
-        private bool CanRemoveFileCommandExecute(object p) => SelectedFiles?.Count > 0 ;
+        private bool CanRemoveFileCommandExecute(object p) => SelectedFiles?.Count > 0;
         
-
         private void OnRemoveFileCommandExecuted(object p)
         {
-            RemoveFiles(SelectedFiles.ToList());
+            RemoveFiles(SelectedFiles.Select(i => (EGISSOFile)i));
         }
+
         #endregion
 
-        #region DeleteFileCommand
+        #region RemoveFilesCommand
 
         public ICommand RemoveFilesCommand { get; set; }
 
         private bool CanRemoveFilesCommandExecute(object p) => Files?.Count > 0;
 
-
         private void OnRemoveFilesCommandExecuted(object p)
         {
-            _fileRepository.RemoveAll();
+            RemoveFiles(Files);
         }
 
         #endregion
@@ -104,17 +105,7 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private void OnSaveFileCommandExecuted(object p)
         {
-            foreach (EGISSOFile item in SelectedFiles)
-            {
-                try
-                {
-                    _fileRepository.Save(item);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "EGISSOEditor", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
+            SaveFiles(SelectedFiles.Select(i => (EGISSOFile)i));
         }
 
         #endregion
@@ -143,7 +134,6 @@ namespace EGISSOEditor_2._0.ViewModels
                     MessageBox.Show(ex.Message, "EGISSOEditor", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-           // OnPropertyChanged(nameof(Files));
         }
 
         #endregion
@@ -156,18 +146,7 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private void OnSaveAllFileCommandExecuted(object p)
         {
-            foreach (EGISSOFile item in Files)
-            {
-                try
-                {
-                    _fileRepository.Save(item);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "EGISSOEditor", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            
+            SaveFiles(Files);
         }
 
 
@@ -187,13 +166,28 @@ namespace EGISSOEditor_2._0.ViewModels
             _fileRepository = fileRepository;
         }
 
-        private void RemoveFiles(IEnumerable<object> files)
+        private void RemoveFiles(IEnumerable<EGISSOFile> files)
         {
-            foreach (EGISSOFile item in files)
+            foreach (EGISSOFile item in files.ToArray())
             {
                 try
                 {
                     _fileRepository.Remove(item);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "EGISSOEditor", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void SaveFiles(IEnumerable<EGISSOFile> files)
+        {
+            foreach (EGISSOFile item in files.ToArray())
+            {
+                try
+                {
+                    _fileRepository.Save(item);
                 }
                 catch (Exception ex)
                 {

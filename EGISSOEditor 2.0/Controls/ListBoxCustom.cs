@@ -13,19 +13,6 @@ namespace EGISSOEditor_2._0.Controls
 {
     class ListBoxCustom: ListBox
     {
-        public static readonly DependencyProperty TestProperty =
-         DependencyProperty.Register("Test",
-             typeof(int), typeof(ListBoxCustom));
-             
-
-        public int Test
-        {
-            get => (int)GetValue(TestProperty);
-            set => SetValue(TestProperty, value);
-        }
-
-
-
         public static readonly DependencyProperty BindableSelectedItemsProperty =
          DependencyProperty.Register("BindableSelectedItems",
              typeof(ObservableCollection<object>), typeof(ListBoxCustom));
@@ -39,10 +26,7 @@ namespace EGISSOEditor_2._0.Controls
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
             base.OnSelectionChanged(e);
-            Test = SelectedItems.Count;
             BindableSelectedItems = new ObservableCollection<object>((IEnumerable<object>)SelectedItems);
         }
-
-       
     }
 }

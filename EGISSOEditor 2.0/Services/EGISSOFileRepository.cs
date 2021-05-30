@@ -36,7 +36,7 @@ namespace EGISSOEditor_2._0.Services
             if (path.IndexOf(_directoryTemplate) != -1)
                 throw new ArgumentException("Данный файл нельзя добавить!");
 
-            string tempPath = _directoryTemplate + "\\" + _id.ToString();
+            string tempPath = $"{_directoryTemplate}\\{_id}{Path.GetExtension(path)}";
 
             if (File.Exists(tempPath))
             {
@@ -46,6 +46,7 @@ namespace EGISSOEditor_2._0.Services
 
             File.Copy(path, tempPath);
             _items.Add(new EGISSOFile(_id++, path, tempPath));
+            File.SetAttributes(tempPath, FileAttributes.Hidden);
             return true;
         }
 
@@ -65,6 +66,7 @@ namespace EGISSOEditor_2._0.Services
         public void Save(EGISSOFile element)
         {
             File.Copy(element.TemplateDirectory, element.Directory, true);
+            File.SetAttributes(element.Directory, FileAttributes.Normal);
             element.IsFileChanged = false;
         }
 
@@ -73,6 +75,9 @@ namespace EGISSOEditor_2._0.Services
             if (Items.Any(i => i.Directory == newDirectory || i.TemplateDirectory == newDirectory) || 
                 newDirectory.IndexOf(_directoryTemplate) != -1)
                 throw new ArgumentException($"{newDirectory} не корректный путь или текущий объект уже добален!");
+
+            if (File.Exists(element.TemplateDirectory) == false)
+                throw new ArgumentException($"Файл не найден!");
 
             element.Directory = newDirectory;
             Save(element);

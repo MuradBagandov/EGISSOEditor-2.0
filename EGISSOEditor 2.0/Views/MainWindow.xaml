@@ -10,7 +10,8 @@
         xmlns:controls="clr-namespace:EGISSOEditor_2._0.Controls"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowModel,Source={StaticResource Locator}}"
-        Title="{Binding SelectedFiles, UpdateSourceTrigger=PropertyChanged}" Height="450" Width="800">
+        Title="EGISSOEditor" Height="450" Width="800" Closing="Window_Closing">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
@@ -31,7 +32,7 @@
                 </Style>
             </StackPanel.Resources>
             <Button Command="{Binding AddFileCommand}" ToolTip="Добавить">
-                <Image Source="../Resources/Icons/Add_file.png"/>
+                <Image Source="../Resources/Icons/File_add_1.png"/>
             </Button>
             <Button Command="{Binding SaveFileCommand}" ToolTip="Сохранить">
                 <Image Source="../Resources/Icons/Save_2.png"/>
@@ -39,14 +40,14 @@
             <Button Command="{Binding SaveAsFileCommand}" ToolTip="Сохранить как">
                 <Image Source="../Resources/Icons/Save_as_2.png"/>
             </Button>
-            <Button>
+            <Button Command="{Binding SaveAllFileCommand}" ToolTip="Сохранить все">
                 <Image Source="../Resources/Icons/Save_all_2.png"/>
             </Button>
             <Button Command="{Binding RemoveFileCommand}" ToolTip="Удалить">
-                <Image Source="../Resources/Icons/close_file.png"/>
+                <Image Source="../Resources/Icons/File_remove_1.png"/>
             </Button>
             <Button Command="{Binding RemoveFilesCommand}" ToolTip="Удалить все">
-                <Image Source="../Resources/Icons/close_files_all.png"/>
+                <Image Source="../Resources/Icons/File_remove_all_1.png"/>
             </Button>
 
         </StackPanel>
@@ -55,7 +56,21 @@
             <Grid.Resources>
                 <DataTemplate DataType="{x:Type model:EGISSOFile}">
                     <StackPanel Width="80">
-                        <Image Source="../Resources/Icons/File_Excel.png" Width="50"/>
+                        <TextBlock Text="{Binding IsFileChanged}" x:Name="IsFileChanged" Visibility="Collapsed"/>
+                        <Image Width="60">
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="True">
+                                            <Setter Property="Source" Value="../Resources/Icons/File_edit_1.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="False">
+                                            <Setter Property="Source" Value="../Resources/Icons/File_1.png"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
                         <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center"/>
                     </StackPanel>
                 </DataTemplate>
