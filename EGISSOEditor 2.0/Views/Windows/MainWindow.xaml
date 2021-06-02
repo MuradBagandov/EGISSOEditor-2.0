@@ -19,7 +19,7 @@
             <RowDefinition/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="1">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
             <StackPanel.Resources>
                 <Style TargetType="Button">
                     <Style.Setters>
@@ -34,28 +34,29 @@
                 </Style>
             </StackPanel.Resources>
             <Button Command="{Binding AddFileCommand}" ToolTip="Добавить">
-                <Image Source="../Resources/Icons/File_add_1.png"/>
+                <Image Source="../../Resources/Icons/File_add_1.png"/>
             </Button>
             <Button Command="{Binding SaveFileCommand}" ToolTip="Сохранить">
-                <Image Source="../Resources/Icons/Save_2.png"/>
+                <Image Source="../../Resources/Icons/Save_2.png"/>
             </Button>
             <Button Command="{Binding SaveAsFileCommand}" ToolTip="Сохранить как">
-                <Image Source="../Resources/Icons/Save_as_2.png"/>
+                <Image Source="../../Resources/Icons/Save_as_2.png"/>
             </Button>
             <Button Command="{Binding SaveAllFileCommand}" ToolTip="Сохранить все">
-                <Image Source="../Resources/Icons/Save_all_2.png"/>
+                <Image Source="../../Resources/Icons/Save_all_2.png"/>
             </Button>
             <Button Command="{Binding RemoveFileCommand}" ToolTip="Удалить">
-                <Image Source="../Resources/Icons/File_remove_1.png"/>
+                <Image Source="../../Resources/Icons/File_remove_1.png"/>
             </Button>
             <Button Command="{Binding RemoveFilesCommand}" ToolTip="Удалить все">
-                <Image Source="../Resources/Icons/File_remove_all_1.png"/>
+                <Image Source="../../Resources/Icons/File_remove_all_1.png"/>
             </Button>
         </StackPanel>
 
         <DockPanel Grid.Row="2">
             <Slider x:Name="slSize" DockPanel.Dock="Right"
-                    Minimum ="60" Maximum="100" Orientation="Horizontal" Width="150" Margin="10,8"/>
+                    Minimum ="60" Maximum="100" Orientation="Horizontal" Width="150" Margin="10,8"
+                    ToolTip="{Binding Value,  ElementName=slSize}"/>
             <Grid/>
         </DockPanel>
         
@@ -66,16 +67,17 @@
                     <StackPanel Width="{Binding Value, ElementName=slSize, UpdateSourceTrigger=PropertyChanged}"
                                 ToolTip="{Binding Directory}">
                         <TextBlock Text="{Binding IsFileChanged}" x:Name="IsFileChanged" Visibility="Collapsed"/>
-                        <Image Width="{Binding Value, ElementName=slSize, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource LinearB-20}}" 
+                        <Image x:Name="IconListBoxItem"
+                            Width="{Binding Value, ElementName=slSize, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource LinearB-20}}" 
                                DataContext="{Binding RelativeSource={RelativeSource AncestorType=Grid}}">
                             <Image.Style>
                                 <Style TargetType="{x:Type Image}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="True">
-                                            <Setter Property="Source" Value="../Resources/Icons/File_edit_1.png"/>
+                                            <Setter Property="Source" Value="../../Resources/Icons/File_edit_1.png"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="False">
-                                            <Setter Property="Source" Value="../Resources/Icons/File_1.png"/>
+                                            <Setter Property="Source" Value="../../Resources/Icons/File_1.png"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

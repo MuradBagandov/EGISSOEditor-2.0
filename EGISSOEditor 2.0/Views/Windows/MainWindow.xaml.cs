@@ -12,11 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using EGISSOEditor_2._0.Models;
-using EGISSOEditor_2._0.Services;
-using EGISSOEditor_2._0.Services.Interfaces;
-using EGISSOEditor_2._0.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using EGISSOEditor_2._0.Models;
+using EGISSOEditor_2._0.Services.Interfaces;
 
 namespace EGISSOEditor_2._0
 {

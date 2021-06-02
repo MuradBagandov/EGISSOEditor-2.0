@@ -27,7 +27,7 @@ namespace EGISSOEditor_2._0.Models
 
         public string Name => Path.GetFileName(Directory);
 
-        private bool _isFileChanged = true;
+        private bool _isFileChanged = false;
         public bool IsFileChanged 
         {
             get => _isFileChanged;
