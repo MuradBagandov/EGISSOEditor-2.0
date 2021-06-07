@@ -15,5 +15,6 @@ namespace EGISSOEditor_2._0.Services.Interfaces
 
         void Save(IFileRepository<T> repository, IEnumerable<T> elements);
 
+        void SaveAs(IFileRepository<T> repository, T elements, string newDirectory);
     }
 }

@@ -11,9 +11,10 @@
         xmlns:conv="clr-namespace:EGISSOEditor_2._0.Infrastuctures.Convertors"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowModel,Source={StaticResource Locator}}"
+        
         Title="EGISSOEditor" Height="450" Width="800" Closing="Window_Closing">
 
-    <Grid>
+    <Grid Background="{StaticResource SolidBrush_WhiteSmoke}">
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition/>
@@ -83,13 +84,17 @@
                                 </Style>
                             </Image.Style>
                         </Image>
-                        <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center" MaxHeight="50"/>
+                        <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center" MaxHeight="150"/>
                     </StackPanel>
                 </DataTemplate>
             </Grid.Resources>
 
-            <controls:ListBoxCustom VerticalContentAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="lsbs"
-                 ItemsSource="{Binding Files, UpdateSourceTrigger=PropertyChanged}" SelectionMode="Extended" BindableSelectedItems="{Binding SelectedFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            <controls:ListBoxCustom Background="{StaticResource SolidBrush_WhiteSmoke}"
+                                    ItemsSource="{Binding Files, UpdateSourceTrigger=PropertyChanged}" 
+                                    SelectionMode="Extended" 
+                                    BindableSelectedItems="{Binding SelectedFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                    VerticalContentAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                    BorderThickness="1">
                 <controls:ListBoxCustom.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>

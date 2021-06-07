@@ -216,6 +216,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Services\EGISSOFileRepository.cs" />
     <Compile Include="Services\EGISSORepositoryProcedureDialog.cs" />
+    <Compile Include="Services\Enums\DialogResult.cs" />
+    <Compile Include="Services\Enums\ShowMessageButtons.cs" />
+    <Compile Include="Services\Enums\ShowMessageIcon.cs" />
     <Compile Include="Services\Interfaces\IFileRepository.cs" />
     <Compile Include="Services\Interfaces\IRepositoryProcedureDialog.cs" />
     <Compile Include="ViewModels\Base\ViewModel.cs" />

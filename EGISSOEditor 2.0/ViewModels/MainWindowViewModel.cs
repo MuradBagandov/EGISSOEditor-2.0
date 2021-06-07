@@ -18,6 +18,7 @@ namespace EGISSOEditor_2._0.ViewModels
     internal class MainWindowViewModel : Base.ViewModel
     {
         private IFileRepository<EGISSOFile> _fileRepository;
+        private IRepositoryProcedureDialog<EGISSOFile> _repositoryProcedureDialog;
 
         #region Properties
 
@@ -47,25 +48,15 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private void OnAddFileCommandExecuted(object p)
         {
-            OpenFileDialog ofdAddFiles = new OpenFileDialog()
+            OpenFileDialog openDialog = new OpenFileDialog()
             {
                 Multiselect = true,
-                Filter = "Excel xlsx; xls|*.xlsx; *.xls"
+                Filter = "Excel xlsx; xls|*.xlsx; *.xls",
             };
 
-            if (ofdAddFiles.ShowDialog() == true)
+            if (openDialog.ShowDialog() == true)
             {
-                foreach (string file in ofdAddFiles.FileNames)
-                {
-                    try
-                    {
-                        _fileRepository.Add(file);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "EGISSOEditor", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
+                _repositoryProcedureDialog.Add(_fileRepository, openDialog.FileNames);
             }
         }
 
@@ -77,10 +68,8 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private bool CanRemoveFileCommandExecute(object p) => SelectedFiles?.Count > 0;
         
-        private void OnRemoveFileCommandExecuted(object p)
-        {
-            RemoveFiles(SelectedFiles.Select(i => (EGISSOFile)i));
-        }
+        private void OnRemoveFileCommandExecuted(object p)=>
+            _repositoryProcedureDialog.Remove(_fileRepository, SelectedFiles.Select(i => (EGISSOFile)i));
 
         #endregion
 
@@ -90,10 +79,8 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private bool CanRemoveFilesCommandExecute(object p) => Files?.Count > 0;
 
-        private void OnRemoveFilesCommandExecuted(object p)
-        {
-            RemoveFiles(Files);
-        }
+        private void OnRemoveFilesCommandExecuted(object p)=>
+            _repositoryProcedureDialog.Remove(_fileRepository, Files);
 
         #endregion
 
@@ -103,10 +90,8 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private bool CanSaveFileCommandExecute(object p) => SelectedFiles?.Count > 0;
 
-        private void OnSaveFileCommandExecuted(object p)
-        {
-            SaveFiles(SelectedFiles.Select(i => (EGISSOFile)i));
-        }
+        private void OnSaveFileCommandExecuted(object p)=>
+            _repositoryProcedureDialog.Save(_fileRepository, SelectedFiles.Select(i => (EGISSOFile)i));
 
         #endregion
 
@@ -118,22 +103,13 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private void OnSaveAsFileCommandExecuted(object p)
         {
-            SaveFileDialog dialog = new SaveFileDialog()
+            SaveFileDialog saveDialog = new SaveFileDialog()
             {
                 Filter = "Excel xlsx; xls|*.xlsx; *.xls"
             };
 
-            if (dialog.ShowDialog() == true)
-            {
-                try
-                {
-                    _fileRepository.SaveAs((EGISSOFile)SelectedFiles.First(), dialog.FileName);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "EGISSOEditor", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
+            if (saveDialog.ShowDialog() == true)
+                _repositoryProcedureDialog.SaveAs(_fileRepository, (EGISSOFile)SelectedFiles.First(), saveDialog.FileName);
         }
 
         #endregion
@@ -144,17 +120,14 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private bool CanSaveAllFileCommandExecute(object p) => Files.Count > 0;
 
-        private void OnSaveAllFileCommandExecuted(object p)
-        {
-            SaveFiles(Files);
-        }
+        private void OnSaveAllFileCommandExecuted(object p)=> _repositoryProcedureDialog.Save(_fileRepository, Files);
 
 
         #endregion
 
         #endregion
 
-        public MainWindowViewModel(IFileRepository<EGISSOFile> fileRepository)
+        public MainWindowViewModel(IFileRepository<EGISSOFile> fileRepository, IRepositoryProcedureDialog<EGISSOFile> repositoryProcedureDialog)
         {
             AddFileCommand = new LambdaCommand(OnAddFileCommandExecuted);
             RemoveFileCommand = new LambdaCommand(OnRemoveFileCommandExecuted, CanRemoveFileCommandExecute);
@@ -164,36 +137,7 @@ namespace EGISSOEditor_2._0.ViewModels
             SaveAllFileCommand = new LambdaCommand(OnSaveAllFileCommandExecuted, CanSaveAllFileCommandExecute);
 
             _fileRepository = fileRepository;
-        }
-
-        private void RemoveFiles(IEnumerable<EGISSOFile> files)
-        {
-            foreach (EGISSOFile item in files.ToArray())
-            {
-                try
-                {
-                    _fileRepository.Remove(item);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "EGISSOEditor", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-
-        private void SaveFiles(IEnumerable<EGISSOFile> files)
-        {
-            foreach (EGISSOFile item in files.ToArray())
-            {
-                try
-                {
-                    _fileRepository.Save(item);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "EGISSOEditor", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
+            _repositoryProcedureDialog = repositoryProcedureDialog;
         }
     }
 }
