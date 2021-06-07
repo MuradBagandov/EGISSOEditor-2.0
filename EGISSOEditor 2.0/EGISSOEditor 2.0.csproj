@@ -215,12 +215,21 @@
     <Compile Include="Models\EGISSOFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\EGISSOFileRepository.cs" />
+    <Compile Include="Services\EGISSORepositoryProcedureDialog.cs" />
     <Compile Include="Services\Interfaces\IFileRepository.cs" />
+    <Compile Include="Services\Interfaces\IRepositoryProcedureDialog.cs" />
     <Compile Include="ViewModels\Base\ViewModel.cs" />
+    <Compile Include="Views\Windows\DialogProcedureWindow.xaml.cs">
+      <DependentUpon>DialogProcedureWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Windows\ProgressWindow.xaml.cs">
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\Styles\Brushes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\DialogProcedureWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
