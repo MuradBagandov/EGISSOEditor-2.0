@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Microsoft.Extensions.DependencyInjection;
 using EGISSOEditor_2._0.Models;
 using EGISSOEditor_2._0.Services.Interfaces;
+using EGISSOEditor_2._0.Services.Enums;
 
 namespace EGISSOEditor_2._0
 {
@@ -24,6 +25,7 @@ namespace EGISSOEditor_2._0
     public partial class MainWindow : Window
     {
         private IFileRepository<EGISSOFile> repository => App.Host.Services.GetRequiredService<IFileRepository<EGISSOFile>>();
+        private IUserDialog userDialog => App.Host.Services.GetRequiredService<IUserDialog>();
 
         public MainWindow()
         {
@@ -36,7 +38,8 @@ namespace EGISSOEditor_2._0
 
             if (items.Count > 0)
             {
-                if (MessageBox.Show($"У вас есть несохраненные файлы! \n Вы действительно хотите выйти?", Title, MessageBoxButton.YesNo) == MessageBoxResult.No)
+                if (userDialog.ShowMessage($"У вас есть несохраненные файлы! \n Вы действительно хотите выйти?", Title, ShowMessageIcon.Infomation, ShowMessageButtons.YesNo) 
+                    == Services.Enums.DialogResult.No)
                 {
                     e.Cancel = true;
                     return;

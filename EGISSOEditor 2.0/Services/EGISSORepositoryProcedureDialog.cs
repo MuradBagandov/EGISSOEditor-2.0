@@ -11,6 +11,13 @@ namespace EGISSOEditor_2._0.Services
     internal class EGISSORepositoryProcedureDialog : IRepositoryProcedureDialog<EGISSOFile>
     {
         public IFileRepository<EGISSOFile> Repository { get; set; }
+        private IUserDialog _userDialog;
+
+
+        public EGISSORepositoryProcedureDialog(IUserDialog userDialog)
+        {
+            _userDialog = userDialog;
+        }
 
         public void Add(string[] files)
         {
@@ -25,7 +32,7 @@ namespace EGISSOEditor_2._0.Services
                 }
                 catch (Exception e)
                 {
-                    ShowMessage(e.Message, "Добавление файла", ShowMessageIcon.Infomation, ShowMessageButtons.Ok);
+                    _userDialog.ShowMessage(e.Message, "Добавление файла", ShowMessageIcon.Infomation, ShowMessageButtons.Ok);
                 }
             }
         }
@@ -39,7 +46,7 @@ namespace EGISSOEditor_2._0.Services
             {
                 if (item.IsFileChanged)
                 {
-                    var dialogResult = ShowMessage($"Файл {item.Name} был изменен! Сохранить изменения?", "Удаление", ShowMessageIcon.Infomation, ShowMessageButtons.YesNoCancel);
+                    var dialogResult = _userDialog.ShowMessage($"Файл {item.Name} был изменен! Сохранить изменения?", "Удаление", ShowMessageIcon.Infomation, ShowMessageButtons.YesNoCancel);
 
                     if (dialogResult == DialogResult.Yes)
                         Save(item);
@@ -62,7 +69,7 @@ namespace EGISSOEditor_2._0.Services
                 }
                 catch (Exception e)
                 {
-                    ShowMessage(e.Message, "Cохранение", ShowMessageIcon.Infomation, ShowMessageButtons.Ok);
+                    _userDialog.ShowMessage(e.Message, "Cохранение", ShowMessageIcon.Infomation, ShowMessageButtons.Ok);
                 }
         }
 
@@ -80,21 +87,8 @@ namespace EGISSOEditor_2._0.Services
             }
             catch (Exception e)
             {
-                ShowMessage(e.Message, "Cохранение", ShowMessageIcon.Infomation, ShowMessageButtons.Ok);
+                _userDialog.ShowMessage(e.Message, "Cохранение", ShowMessageIcon.Infomation, ShowMessageButtons.Ok);
             }
-        }
-
-        private DialogResult ShowMessage(string text, string title, ShowMessageIcon icon, ShowMessageButtons buttons)
-        {
-            var dialog = new DialogProcedureWindow()
-            {
-                Owner = App.ActiveWindow,
-                Title = title,
-                MessageIcon = icon,
-                MessageButtons = buttons,
-                MessageText = text
-            };
-            return dialog.ShowDialog() == true ? dialog.ShowDialogResult : DialogResult.Cancel;
         }
     }
 }

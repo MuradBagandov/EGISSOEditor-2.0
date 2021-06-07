@@ -56,6 +56,7 @@ namespace EGISSOEditor_2._0
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<IFileRepository<EGISSOFile>, EGISSOFileRepository>();
             services.AddSingleton<IRepositoryProcedureDialog<EGISSOFile>, EGISSORepositoryProcedureDialog>();
+            services.AddSingleton<IUserDialog, UserDialog>();
         }
 
         public static string GetSourceCodePath([CallerFilePath] string path = null) => path;
