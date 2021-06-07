@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using EGISSOEditor_2._0.Models;
 using System.Collections.ObjectModel;
@@ -28,20 +25,20 @@ namespace EGISSOEditor_2._0.Services
         public bool Add(string path)
         {
             if (!File.Exists(path))
-                throw new ArgumentException("Файл не найден!");
+                throw new ArgumentException($"Файл {path} не найден!");
 
             if (_items.Any(i => i.Directory == path))
-                throw new ArgumentException("Данный файл уже добавлен!");
+                throw new ArgumentException($"Файл {path} уже добавлен!");
 
             if (path.IndexOf(_directoryTemplate) != -1)
-                throw new ArgumentException("Данный файл нельзя добавить!");
+                throw new ArgumentException($"Ошибка добавления файла {path}");
 
             string tempPath = $"{_directoryTemplate}\\{_id}{Path.GetExtension(path)}";
 
             if (File.Exists(tempPath))
             {
                 try { File.Delete(tempPath); }
-                catch { throw new Exception("Ошибка добавления файла"); }
+                catch { throw new Exception($"Ошибка добавления файла {path}"); }
             }
 
             File.Copy(path, tempPath);

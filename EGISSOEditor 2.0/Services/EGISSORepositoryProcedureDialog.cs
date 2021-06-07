@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EGISSOEditor_2._0.Models;
 using EGISSOEditor_2._0.Services.Interfaces;
 using EGISSOEditor_2._0.Views.Windows;
@@ -28,7 +26,6 @@ namespace EGISSOEditor_2._0.Services
                 catch (Exception e)
                 {
                     ShowMessage(e.Message, "Добавление файла", ShowMessageIcon.Infomation, ShowMessageButtons.Ok);
-
                 }
             }
         }
