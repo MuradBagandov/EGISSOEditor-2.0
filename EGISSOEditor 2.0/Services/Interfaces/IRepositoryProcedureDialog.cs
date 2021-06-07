@@ -8,13 +8,14 @@ namespace EGISSOEditor_2._0.Services.Interfaces
 {
     internal interface IRepositoryProcedureDialog<T> where T: class
     {
+        public IFileRepository<T> Repository { get; }
 
-        void Add(IFileRepository<T> repository, string[] files);
+        void Add(string[] files);
 
-        void Remove(IFileRepository<T> repository, IEnumerable<T> elements);
+        void Remove(IEnumerable<T> elements);
 
-        void Save(IFileRepository<T> repository, IEnumerable<T> elements);
+        void Save(IEnumerable<T> elements);
 
-        void SaveAs(IFileRepository<T> repository, T elements, string newDirectory);
+        void SaveAs(T elements, string newDirectory);
     }
 }
