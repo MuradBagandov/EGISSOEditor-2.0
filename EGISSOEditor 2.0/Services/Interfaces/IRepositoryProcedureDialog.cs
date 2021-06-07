@@ -8,7 +8,7 @@ namespace EGISSOEditor_2._0.Services.Interfaces
 {
     internal interface IRepositoryProcedureDialog<T> where T: class
     {
-        public IFileRepository<T> Repository { get; }
+        public IFileRepository<T> Repository { get; set; }
 
         void Add(string[] files);
 

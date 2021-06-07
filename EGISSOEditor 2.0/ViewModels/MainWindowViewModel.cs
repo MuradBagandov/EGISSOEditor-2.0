@@ -56,7 +56,7 @@ namespace EGISSOEditor_2._0.ViewModels
 
             if (openDialog.ShowDialog() == true)
             {
-                _repositoryProcedureDialog.Add(_fileRepository, openDialog.FileNames);
+                _repositoryProcedureDialog.Add(openDialog.FileNames);
             }
         }
 
@@ -69,7 +69,7 @@ namespace EGISSOEditor_2._0.ViewModels
         private bool CanRemoveFileCommandExecute(object p) => SelectedFiles?.Count > 0;
         
         private void OnRemoveFileCommandExecuted(object p)=>
-            _repositoryProcedureDialog.Remove(_fileRepository, SelectedFiles.Select(i => (EGISSOFile)i));
+            _repositoryProcedureDialog.Remove(SelectedFiles.Select(i => (EGISSOFile)i));
 
         #endregion
 
@@ -80,7 +80,7 @@ namespace EGISSOEditor_2._0.ViewModels
         private bool CanRemoveFilesCommandExecute(object p) => Files?.Count > 0;
 
         private void OnRemoveFilesCommandExecuted(object p)=>
-            _repositoryProcedureDialog.Remove(_fileRepository, Files);
+            _repositoryProcedureDialog.Remove(Files);
 
         #endregion
 
@@ -91,7 +91,7 @@ namespace EGISSOEditor_2._0.ViewModels
         private bool CanSaveFileCommandExecute(object p) => SelectedFiles?.Count > 0;
 
         private void OnSaveFileCommandExecuted(object p)=>
-            _repositoryProcedureDialog.Save(_fileRepository, SelectedFiles.Select(i => (EGISSOFile)i));
+            _repositoryProcedureDialog.Save(SelectedFiles.Select(i => (EGISSOFile)i));
 
         #endregion
 
@@ -109,7 +109,7 @@ namespace EGISSOEditor_2._0.ViewModels
             };
 
             if (saveDialog.ShowDialog() == true)
-                _repositoryProcedureDialog.SaveAs(_fileRepository, (EGISSOFile)SelectedFiles.First(), saveDialog.FileName);
+                _repositoryProcedureDialog.SaveAs((EGISSOFile)SelectedFiles.First(), saveDialog.FileName);
         }
 
         #endregion
@@ -120,7 +120,7 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private bool CanSaveAllFileCommandExecute(object p) => Files.Count > 0;
 
-        private void OnSaveAllFileCommandExecuted(object p)=> _repositoryProcedureDialog.Save(_fileRepository, Files);
+        private void OnSaveAllFileCommandExecuted(object p)=> _repositoryProcedureDialog.Save(Files);
 
 
         #endregion
@@ -138,6 +138,7 @@ namespace EGISSOEditor_2._0.ViewModels
 
             _fileRepository = fileRepository;
             _repositoryProcedureDialog = repositoryProcedureDialog;
+            _repositoryProcedureDialog.Repository = _fileRepository;
         }
     }
 }
