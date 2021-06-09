@@ -22,12 +22,12 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
             <StackPanel.Resources>
-                <Style TargetType="Button">
+                <Style TargetType="{x:Type Button}">
                     <Style.Setters>
                         <Setter Property="Background" Value="{StaticResource SolidBrush_White}"/>
                         <Setter Property="Padding" Value="2,0"/>
                         <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Margin" Value="2,0"/>
+                        <Setter Property="Margin" Value="3,0"/>
                     </Style.Setters>
                 </Style>
                 <Style TargetType="Image">
@@ -55,9 +55,9 @@
         </StackPanel>
 
         <DockPanel Grid.Row="2">
-            <Slider x:Name="slSize" DockPanel.Dock="Right"
+            <Slider x:Name="slSize" DockPanel.Dock="Right" Value="80"
                     Minimum ="60" Maximum="100" Orientation="Horizontal" Width="150" Margin="10,8"
-                    ToolTip="{Binding Value,  ElementName=slSize}"/>
+                    SmallChange="1" AutoToolTipPlacement="BottomRight"/>
             <Grid/>
         </DockPanel>
         
@@ -94,7 +94,8 @@
                                     SelectionMode="Extended" 
                                     BindableSelectedItems="{Binding SelectedFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                     VerticalContentAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                    BorderThickness="1">
+                                    BorderThickness="1"
+                                    AllowDrop="True" DragDrop.Drop="ListBoxCustom_Drop">
                 <controls:ListBoxCustom.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>

@@ -26,6 +26,7 @@ namespace EGISSOEditor_2._0
     {
         private IFileRepository<EGISSOFile> repository => App.Host.Services.GetRequiredService<IFileRepository<EGISSOFile>>();
         private IUserDialog userDialog => App.Host.Services.GetRequiredService<IUserDialog>();
+        private IRepositoryProcedureDialog<EGISSOFile> _repositoryDialog => App.Host.Services.GetRequiredService<IRepositoryProcedureDialog<EGISSOFile>>();
 
         public MainWindow()
         {
@@ -48,6 +49,16 @@ namespace EGISSOEditor_2._0
             }
 
             repository.RemoveAll();      
+        }
+
+        private void ListBoxCustom_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = ((string[])e.Data.GetData(DataFormats.FileDrop))
+                    .Where(i => i.EndsWith(".xlsx") || i.EndsWith(".xls")).ToArray();
+                _repositoryDialog.Add(files);
+            }
         }
     }
 }
