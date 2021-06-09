@@ -214,14 +214,17 @@
     <Compile Include="Infrastuctures\Convertors\Linear.cs" />
     <Compile Include="Models\EGISSOFile.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Services\EGISSOFileEditor.cs" />
     <Compile Include="Services\EGISSOFileRepository.cs" />
     <Compile Include="Services\EGISSORepositoryProcedureDialog.cs" />
     <Compile Include="Services\Enums\DialogResult.cs" />
     <Compile Include="Services\Enums\ShowMessageButtons.cs" />
     <Compile Include="Services\Enums\ShowMessageIcon.cs" />
+    <Compile Include="Services\Interfaces\IEGISSOFileEditor.cs" />
     <Compile Include="Services\Interfaces\IFileRepository.cs" />
     <Compile Include="Services\Interfaces\IRepositoryProcedureDialog.cs" />
     <Compile Include="Services\Interfaces\IUserDialog.cs" />
+    <Compile Include="Services\Structs\EGISSOFileEditProgess.cs" />
     <Compile Include="Services\UserDialog.cs" />
     <Compile Include="ViewModels\Base\ViewModel.cs" />
     <Compile Include="Views\Windows\DialogProcedureWindow.xaml.cs">
