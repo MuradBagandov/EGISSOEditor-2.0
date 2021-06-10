@@ -56,7 +56,7 @@ namespace EGISSOEditor_2._0
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = ((string[])e.Data.GetData(DataFormats.FileDrop))
-                    .Where(i => i.EndsWith(".xlsx") || i.EndsWith(".xls")).ToArray();
+                    .Where(i => i.EndsWith(".xlsx")).ToArray();
                 _repositoryDialog.Add(files);
             }
         }

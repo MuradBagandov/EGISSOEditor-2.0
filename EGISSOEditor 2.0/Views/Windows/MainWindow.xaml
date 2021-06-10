@@ -9,6 +9,7 @@
         xmlns:model="clr-namespace:EGISSOEditor_2._0.Models"
         xmlns:controls="clr-namespace:EGISSOEditor_2._0.Controls"
         xmlns:conv="clr-namespace:EGISSOEditor_2._0.Infrastuctures.Convertors"
+        xmlns:cmd="clr-namespace:EGISSOEditor_2._0.Infrastuctures.Commands"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowModel,Source={StaticResource Locator}}"
         
@@ -80,27 +81,42 @@
             <Grid.Resources>
                 <conv:Linear B="-20" x:Key="LinearB-20"/>
                 <DataTemplate DataType="{x:Type model:EGISSOFile}">
-                    <StackPanel Width="{Binding Value, ElementName=slSize, UpdateSourceTrigger=PropertyChanged}"
+                    <Grid>
+                        <StackPanel Width="{Binding Value, ElementName=slSize, UpdateSourceTrigger=PropertyChanged}"
                                 ToolTip="{Binding Directory}">
-                        <TextBlock Text="{Binding IsFileChanged}" x:Name="IsFileChanged" Visibility="Collapsed"/>
-                        <Image x:Name="IconListBoxItem"
+                            <TextBlock Text="{Binding IsFileChanged}" x:Name="IsFileChanged" Visibility="Collapsed"/>
+                            <Image x:Name="IconListBoxItem"
                             Width="{Binding Value, ElementName=slSize, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource LinearB-20}}" 
                                DataContext="{Binding RelativeSource={RelativeSource AncestorType=Grid}}">
-                            <Image.Style>
-                                <Style TargetType="{x:Type Image}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="True">
-                                            <Setter Property="Source" Value="../../Resources/Icons/File_edit_1.png"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="False">
-                                            <Setter Property="Source" Value="../../Resources/Icons/File_1.png"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                        <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center" MaxHeight="150"/>
-                    </StackPanel>
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="True">
+                                                <Setter Property="Source" Value="../../Resources/Icons/File_edit_1.png"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="False">
+                                                <Setter Property="Source" Value="../../Resources/Icons/File_1.png"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center" MaxHeight="150"/>
+                        </StackPanel>
+                        <Grid  Background="{StaticResource SolidBrush_White}" Opacity="0.01">
+                            <Grid.InputBindings>
+                                <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding TemplateDirectory}">
+                                    <MouseBinding.Command>
+                                        <cmd:OpenFileCommand/>
+                                    </MouseBinding.Command>
+                                </MouseBinding>
+                            </Grid.InputBindings>
+                        </Grid>
+                    </Grid>
+                    
+                   
+                    
+                    
                 </DataTemplate>
             </Grid.Resources>
 
@@ -108,7 +124,7 @@
                                     ItemsSource="{Binding Files, UpdateSourceTrigger=PropertyChanged}" 
                                     SelectionMode="Extended" 
                                     BindableSelectedItems="{Binding SelectedFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                    VerticalContentAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                    VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                     BorderThickness="1"
                                     AllowDrop="True" DragDrop.Drop="ListBoxCustom_Drop">
                 <controls:ListBoxCustom.ItemsPanel>

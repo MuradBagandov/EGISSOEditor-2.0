@@ -223,6 +223,7 @@
     <Compile Include="Controls\ListBoxCustom.cs" />
     <Compile Include="Infrastuctures\Commands\Base\Command.cs" />
     <Compile Include="Infrastuctures\Commands\LambdaCommand.cs" />
+    <Compile Include="Infrastuctures\Commands\OpenFileCommand.cs" />
     <Compile Include="Infrastuctures\Convertors\Base\Convertor.cs" />
     <Compile Include="Infrastuctures\Convertors\Base\MultiConvertor.cs" />
     <Compile Include="Infrastuctures\Convertors\Linear.cs" />

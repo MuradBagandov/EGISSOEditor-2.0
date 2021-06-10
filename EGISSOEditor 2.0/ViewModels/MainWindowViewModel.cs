@@ -12,6 +12,7 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using System.Windows;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace EGISSOEditor_2._0.ViewModels
 {
@@ -52,7 +53,7 @@ namespace EGISSOEditor_2._0.ViewModels
             OpenFileDialog openDialog = new OpenFileDialog()
             {
                 Multiselect = true,
-                Filter = "Excel xlsx; xls|*.xlsx; *.xls",
+                Filter = "Excel xlsx;|*.xlsx;"
             };
 
             if (openDialog.ShowDialog() == true)
@@ -123,7 +124,6 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private void OnSaveAllFileCommandExecuted(object p)=> _repositoryProcedureDialog.Save(Files);
 
-
         #endregion
 
         #endregion
@@ -141,8 +141,6 @@ namespace EGISSOEditor_2._0.ViewModels
             _repositoryProcedureDialog = repositoryProcedureDialog;
             _repositoryProcedureDialog.Repository = _fileRepository;
             _EGISSOEditor = EGISSOEditor;
-
-            _EGISSOEditor.ValidateFile(@"C:\Users\Администратор\Desktop\EGISSO BVA\Шаблон.xlsx");
         }
     }
 }

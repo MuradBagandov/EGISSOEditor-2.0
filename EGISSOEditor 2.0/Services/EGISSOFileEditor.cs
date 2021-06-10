@@ -29,8 +29,8 @@ namespace EGISSOEditor_2._0.Services
                 throw new ArgumentException("Файл не найден");
 
             string fileExtension = Path.GetExtension(path);
-            if (!fileExtension.StartsWith(".xlsx"))
-                throw new ArgumentException("Неккоректный тип файла", nameof(path));
+            if (!fileExtension.Equals(".xlsx"))
+                throw new ArgumentException("Некорректный тип файла", nameof(path));
 
             FileInfo filePattern = new FileInfo("Resources\\Шаблон.xlsx");
             FileInfo file = new FileInfo(path);
