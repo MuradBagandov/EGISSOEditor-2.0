@@ -58,6 +58,21 @@
             <Slider x:Name="slSize" DockPanel.Dock="Right" Value="80"
                     Minimum ="60" Maximum="100" Orientation="Horizontal" Width="150" Margin="10,8"
                     SmallChange="1" AutoToolTipPlacement="BottomRight"/>
+            
+            <Grid DockPanel.Dock="Left">
+                <TextBlock  DockPanel.Dock="Left" Text="{Binding SelectedFiles.Count, StringFormat=Выбранно элементов: {0}}"
+                       Padding="10,0,0,0" FontSize="14" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedFiles.Count}" Value="0">
+                                    <Setter Property="TextBlock.Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
             <Grid/>
         </DockPanel>
         

@@ -31,7 +31,7 @@ namespace EGISSOEditor_2._0.ViewModels
         #endregion
 
         #region SelectedFiles : ObservableCollection<object>
-        private ObservableCollection<object> _selectedFiles;
+        private ObservableCollection<object> _selectedFiles = new ObservableCollection<object>();
 
         public ObservableCollection<object> SelectedFiles
         {
