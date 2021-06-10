@@ -11,9 +11,9 @@ namespace EGISSOEditor_2._0.Services.Interfaces
 {
     interface IEGISSOFileEditor<T> where T: class
     {
-        bool IsFileEGISSO(string path);
+        bool ValidateFile(string path);
 
-        bool IsFileEGISSO(T path);
+        bool ValidateFile(T path);
 
         void FilesStyleCorrection(IEnumerable<T> file);
 

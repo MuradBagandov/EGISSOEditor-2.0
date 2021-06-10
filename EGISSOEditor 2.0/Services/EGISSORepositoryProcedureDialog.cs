@@ -12,11 +12,12 @@ namespace EGISSOEditor_2._0.Services
     {
         public IFileRepository<EGISSOFile> Repository { get; set; }
         private IUserDialog _userDialog;
+        private IEGISSOFileEditor<EGISSOFile> _EGISSOEditor;
 
-
-        public EGISSORepositoryProcedureDialog(IUserDialog userDialog)
+        public EGISSORepositoryProcedureDialog(IUserDialog userDialog, IEGISSOFileEditor<EGISSOFile> EGISSOEditor)
         {
             _userDialog = userDialog;
+            _EGISSOEditor = EGISSOEditor;
         }
 
         public void Add(string[] files)
@@ -28,11 +29,16 @@ namespace EGISSOEditor_2._0.Services
             {
                 try
                 {
+                    if (!_EGISSOEditor.ValidateFile(file))
+                    {
+                        _userDialog.ShowMessage($"Неккорректный файл - {file}!", "Добавление файла", ShowMessageIcon.Error, ShowMessageButtons.Ok);
+                        continue;
+                    }
                     Repository.Add(file);
                 }
                 catch (Exception e)
                 {
-                    _userDialog.ShowMessage(e.Message, "Добавление файла", ShowMessageIcon.Infomation, ShowMessageButtons.Ok);
+                    _userDialog.ShowMessage(e.Message, "Добавление файла", ShowMessageIcon.Error, ShowMessageButtons.Ok);
                 }
             }
         }
@@ -69,7 +75,7 @@ namespace EGISSOEditor_2._0.Services
                 }
                 catch (Exception e)
                 {
-                    _userDialog.ShowMessage(e.Message, "Cохранение", ShowMessageIcon.Infomation, ShowMessageButtons.Ok);
+                    _userDialog.ShowMessage(e.Message, "Cохранение", ShowMessageIcon.Error, ShowMessageButtons.Ok);
                 }
         }
 
@@ -87,7 +93,7 @@ namespace EGISSOEditor_2._0.Services
             }
             catch (Exception e)
             {
-                _userDialog.ShowMessage(e.Message, "Cохранение", ShowMessageIcon.Infomation, ShowMessageButtons.Ok);
+                _userDialog.ShowMessage(e.Message, "Cохранение", ShowMessageIcon.Error, ShowMessageButtons.Ok);
             }
         }
     }

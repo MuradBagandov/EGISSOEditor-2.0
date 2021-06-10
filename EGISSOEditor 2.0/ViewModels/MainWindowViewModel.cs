@@ -19,6 +19,7 @@ namespace EGISSOEditor_2._0.ViewModels
     {
         private IFileRepository<EGISSOFile> _fileRepository;
         private IRepositoryProcedureDialog<EGISSOFile> _repositoryProcedureDialog;
+        private IEGISSOFileEditor<EGISSOFile> _EGISSOEditor;
 
         #region Properties
 
@@ -127,7 +128,7 @@ namespace EGISSOEditor_2._0.ViewModels
 
         #endregion
 
-        public MainWindowViewModel(IFileRepository<EGISSOFile> fileRepository, IRepositoryProcedureDialog<EGISSOFile> repositoryProcedureDialog)
+        public MainWindowViewModel(IFileRepository<EGISSOFile> fileRepository, IRepositoryProcedureDialog<EGISSOFile> repositoryProcedureDialog, IEGISSOFileEditor<EGISSOFile> EGISSOEditor)
         {
             AddFileCommand = new LambdaCommand(OnAddFileCommandExecuted);
             RemoveFileCommand = new LambdaCommand(OnRemoveFileCommandExecuted, CanRemoveFileCommandExecute);
@@ -139,6 +140,9 @@ namespace EGISSOEditor_2._0.ViewModels
             _fileRepository = fileRepository;
             _repositoryProcedureDialog = repositoryProcedureDialog;
             _repositoryProcedureDialog.Repository = _fileRepository;
+            _EGISSOEditor = EGISSOEditor;
+
+            _EGISSOEditor.ValidateFile(@"C:\Users\Администратор\Desktop\EGISSO BVA\Шаблон.xlsx");
         }
     }
 }
