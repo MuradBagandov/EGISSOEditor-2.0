@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EGISSOEditor 2.0", "EGISSOE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{4CFFAFAE-A3BF-40E8-A1A0-DD9EC94E210B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7EF8D98F-A456-4CBB-8385-41C5C49A00E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFTests", "WPFTests\WPFTests.csproj", "{1358C13E-8477-4992-809F-F7CAA7B88744}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +25,17 @@ Global
 		{4CFFAFAE-A3BF-40E8-A1A0-DD9EC94E210B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CFFAFAE-A3BF-40E8-A1A0-DD9EC94E210B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CFFAFAE-A3BF-40E8-A1A0-DD9EC94E210B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1358C13E-8477-4992-809F-F7CAA7B88744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1358C13E-8477-4992-809F-F7CAA7B88744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1358C13E-8477-4992-809F-F7CAA7B88744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1358C13E-8477-4992-809F-F7CAA7B88744}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4CFFAFAE-A3BF-40E8-A1A0-DD9EC94E210B} = {7EF8D98F-A456-4CBB-8385-41C5C49A00E4}
+		{1358C13E-8477-4992-809F-F7CAA7B88744} = {7EF8D98F-A456-4CBB-8385-41C5C49A00E4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5CE430A2-5600-4998-984A-EE4950C4EA6A}
