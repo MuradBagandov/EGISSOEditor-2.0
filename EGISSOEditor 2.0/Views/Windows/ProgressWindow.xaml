@@ -5,42 +5,76 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EGISSOEditor_2._0.Views.Windows"
         ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner"
-        AllowsTransparency="True" Background="Transparent"  
-        Title="ProgressWindow" Width="400" SizeToContent="Height">
+        Background="Transparent" Icon="../../Resources/Icons/Progress.png"
+        Title="EGISSOEditor" Width="400" SizeToContent="Height"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Closing="Window_Closing">
     <Border CornerRadius="1" Background="{StaticResource SolidBrush_White}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             
-            <Grid Grid.Row="0">
+            <Grid Grid.Row="0" Height="40">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=tbProcessName}" Value="">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
                 <Grid.Background>
                     <LinearGradientBrush>
                         <GradientStop Color="#FF00AAEA"/>
                         <GradientStop Color="White" Offset="0.821"/>
                     </LinearGradientBrush>
                 </Grid.Background>
-                <Label Padding="10" Content="Loading..." FontSize="20" VerticalAlignment="Center"/>
+                <TextBlock x:Name="tbProcessName" Padding="12,0,0,0" Text ="{Binding ProcessName}" FontSize="18" VerticalAlignment="Center"/>
             </Grid>
 
             <Grid Grid.Row="1" Margin="10,5,10,10">
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="FontSize" Value="12"/>
                     </Style>
                 </Grid.Resources>
                 
-                <StackPanel>
+                <StackPanel Margin="0,10,0,0">
                     <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
                         <TextBlock Text="Текущий элемент:" Padding="0,0,5,0"/>
-                        <TextBlock Text=""/>
+                        <TextBlock x:Name="tbProcessCurrentFile" Text="{Binding ProcessCurrentFile}"/>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=tbProcessCurrentFile}" Value="">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        
                     </StackPanel>
                     <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
-                        <TextBlock Text="Оставшиеся элементы:" Padding="0,0,5,0"/>
-                        <TextBlock Text=""/>
+                        <TextBlock Text="Выполнено:" Padding="0,0,5,0"/>
+                        <TextBlock x:Name="tbProcessedFiles" Text="{Binding ProcessedFiles}"/>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=tbProcessedFiles}" Value="">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
                     </StackPanel>
-                    <ProgressBar Margin="0,5" Padding="10" Height="15" Value="50"/>
+                    <Grid>
+                        <ProgressBar x:Name="progressbar" Foreground="#FF00AAEA" 
+                                 Value="{Binding Value}" Minimum="0" Maximum="1"/>
+                        <TextBlock Text="{Binding Value, ElementName=progressbar, StringFormat={}{0:p1}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+                    
                 </StackPanel>
             </Grid>
         </Grid>

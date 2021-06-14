@@ -12,7 +12,7 @@
         xmlns:cmd="clr-namespace:EGISSOEditor_2._0.Infrastuctures.Commands"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowModel,Source={StaticResource Locator}}"
-        
+        Icon="../../Resources/Icons/ProgrammICO_1.ico"
         Title="EGISSOEditor" Height="450" Width="800" Closing="Window_Closing">
 
     <Grid Background="{StaticResource SolidBrush_WhiteSmoke}">

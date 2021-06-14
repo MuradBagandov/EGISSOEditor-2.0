@@ -20,7 +20,48 @@ namespace EGISSOEditor_2._0.Services
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
-        public bool ValidateFile(string path)
+        public bool IsValidateFile(string path)=> ValidateFile(path, default, default);
+
+        public bool IsValidateFile(EGISSOFile path) => IsValidateFile(path.Directory);
+        
+        public async Task<bool> IsValidateFileAsync(string path, IProgress<float> progress, CancellationToken cancel)=>
+             await Task.Run(() => ValidateFile(path, progress, cancel));
+
+        public async Task<bool> IsValidateFileAsync(EGISSOFile path, IProgress<float> progress, CancellationToken cancel)=>
+            await Task.Run(() => ValidateFile(path.Directory, progress, cancel));
+
+
+        public void ValidateFiles(IEnumerable<EGISSOFile> file)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ValidateFilesAsync(IEnumerable<EGISSOFile> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void FilesStyleCorrection(IEnumerable<EGISSOFile> file)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task FilesStyleCorrectionAsync(IEnumerable<EGISSOFile> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public EGISSOFile MergingFiles(IEnumerable<EGISSOFile> file)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<EGISSOFile> MergingFilesAsync(IEnumerable<EGISSOFile> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool ValidateFile(string path, IProgress<float> progress, CancellationToken cancel)
         {
             if (!File.Exists("Resources\\Шаблон.xlsx"))
                 return false;
@@ -43,68 +84,33 @@ namespace EGISSOEditor_2._0.Services
                     var sheet = filePackage.Workbook.Worksheets.FirstOrDefault();
                     var patternSheet = patternPackage.Workbook.Worksheets.FirstOrDefault();
                     object cellValue, patternCellValue;
-                    
-                    for (int row = 4; row <= 4; row++)
-                        for (int column = 1; column <= 53; column++)
+
+                    for (int column = 1; column <= 53; column++)
+                    {
+                        cellValue = sheet.Cells[4, column].Value;
+                        patternCellValue = patternSheet.Cells[4, column].Value;
+
+                        if (cellValue == null && patternCellValue == null)
+                            continue;
+
+                        if ((cellValue == null && patternCellValue != null) ||
+                            (cellValue != null && patternCellValue == null))
                         {
-                            cellValue = sheet.Cells[row, column].Value;
-                            patternCellValue = patternSheet.Cells[row, column].Value;
-
-                            if (cellValue == null && patternCellValue == null)
-                                continue;
-
-                            if ((cellValue == null && patternCellValue != null)||
-                                (cellValue != null && patternCellValue == null))
-                            {
-                                differentes++;
-                                continue;
-                            }
-                                
-
-                            if (!cellValue.Equals(patternCellValue))
-                                differentes++;
+                            differentes++;
+                            continue;
                         }
+
+
+                        if (!cellValue.Equals(patternCellValue))
+                            differentes++;
+                        progress?.Report(column / 53.0f); 
+                        cancel.ThrowIfCancellationRequested();
+                    }
                 }
             }
-                
+            progress?.Report(1.0f);
             return differentes < 40;
         }
-
-        public bool ValidateFile(EGISSOFile path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CorrectionErrorsFiles(IEnumerable<EGISSOFile> file)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task CorrectionErrorsFilesAsync(IEnumerable<EGISSOFile> file, IProgress<EGISSOFilesEditProgess> progress, CancellationToken cancel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void FilesStyleCorrection(IEnumerable<EGISSOFile> file)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task FilesStyleCorrectionAsync(IEnumerable<EGISSOFile> file, IProgress<EGISSOFilesEditProgess> progress, CancellationToken cancel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EGISSOFile MergingFiles(IEnumerable<EGISSOFile> file)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<EGISSOFile> MergingFilesAsync(IEnumerable<EGISSOFile> file, IProgress<EGISSOFilesEditProgess> progress, CancellationToken cancel)
-        {
-            throw new NotImplementedException();
-        }
-
 
         /// <summary>
         /// Вычисляет количество строк в файле, без строк заголовков
@@ -140,5 +146,7 @@ namespace EGISSOEditor_2._0.Services
                 return true;
             }
         }
+
+       
     }
 }

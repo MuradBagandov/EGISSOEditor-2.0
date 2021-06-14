@@ -17,7 +17,7 @@ namespace EGISSOEditor_2._0.Services
         private readonly string _directoryTemplate;
         public EGISSOFileRepository()
         {
-            _directoryTemplate = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\temp";
+            _directoryTemplate = "temp";
             if (!Directory.Exists(_directoryTemplate))
                 Directory.CreateDirectory(_directoryTemplate);
         }
@@ -64,6 +64,7 @@ namespace EGISSOEditor_2._0.Services
         {
             File.Copy(element.TemplateDirectory, element.Directory, true);
             File.SetAttributes(element.Directory, FileAttributes.Normal);
+            File.SetLastWriteTime(element.Directory,  DateTime.Now);
             element.IsFileChanged = false;
         }
 
@@ -71,7 +72,7 @@ namespace EGISSOEditor_2._0.Services
         {
             if (Items.Any(i => i.Directory == newDirectory || i.TemplateDirectory == newDirectory) || 
                 newDirectory.IndexOf(_directoryTemplate) != -1)
-                throw new ArgumentException($"{newDirectory} не корректный путь или текущий объект уже добален!");
+                throw new ArgumentException($"{newDirectory} некорректный путь или текущий объект уже добален!");
 
             if (File.Exists(element.TemplateDirectory) == false)
                 throw new ArgumentException($"Файл не найден!");

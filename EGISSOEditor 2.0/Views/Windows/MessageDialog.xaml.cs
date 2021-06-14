@@ -18,14 +18,14 @@ namespace EGISSOEditor_2._0.Views.Windows
     /// <summary>
     /// Логика взаимодействия для DialogProcedureWindow.xaml
     /// </summary>
-    public partial class DialogProcedureWindow : Window
+    public partial class MessageDialog : Window
     {
         #region Properties
         public static readonly DependencyProperty MessageTextProperty =
             DependencyProperty.Register(
                 nameof(MessageText),
                 typeof(string),
-                typeof(DialogProcedureWindow));
+                typeof(MessageDialog));
 
 
         public string MessageText
@@ -41,7 +41,7 @@ namespace EGISSOEditor_2._0.Views.Windows
            DependencyProperty.Register(
                nameof(MessageIcon),
                typeof(ShowMessageIcon),
-               typeof(DialogProcedureWindow),
+               typeof(MessageDialog),
                new PropertyMetadata(ShowMessageIcon.None));
 
 
@@ -55,7 +55,7 @@ namespace EGISSOEditor_2._0.Views.Windows
            DependencyProperty.Register(
                nameof(MessageButtonsProperty),
                typeof(ShowMessageButtons),
-               typeof(DialogProcedureWindow),
+               typeof(MessageDialog),
                new PropertyMetadata(ShowMessageButtons.YesNoCancel));
 
         public ShowMessageButtons MessageButtons
@@ -73,7 +73,7 @@ namespace EGISSOEditor_2._0.Views.Windows
 
 
 
-        public DialogProcedureWindow()
+        public MessageDialog()
         {
             InitializeComponent();
             this.Loaded += ShowMessageWindow_Loaded;

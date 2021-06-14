@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,8 +25,8 @@ namespace EGISSOEditor_2._0
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IFileRepository<EGISSOFile> repository => App.Host.Services.GetRequiredService<IFileRepository<EGISSOFile>>();
-        private IUserDialog userDialog => App.Host.Services.GetRequiredService<IUserDialog>();
+        private IFileRepository<EGISSOFile> _repository => App.Host.Services.GetRequiredService<IFileRepository<EGISSOFile>>();
+        private IUserDialog _userDialog => App.Host.Services.GetRequiredService<IUserDialog>();
         private IRepositoryProcedureDialog<EGISSOFile> _repositoryDialog => App.Host.Services.GetRequiredService<IRepositoryProcedureDialog<EGISSOFile>>();
 
         public MainWindow()
@@ -35,29 +36,28 @@ namespace EGISSOEditor_2._0
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var items = repository.Items.Where(i => i.IsFileChanged == true).ToList();
+            var items = _repository.Items.Where(i => i.IsFileChanged == true).ToList();
 
             if (items.Count > 0)
             {
-                if (userDialog.ShowMessage($"У вас есть несохраненные файлы! \n Вы действительно хотите выйти?", Title, ShowMessageIcon.Infomation, ShowMessageButtons.YesNo) 
+                if (_userDialog.ShowMessage($"У вас есть несохраненные файлы! \n Вы действительно хотите выйти?", Title, ShowMessageIcon.Infomation, ShowMessageButtons.YesNo) 
                     == Services.Enums.DialogResult.No)
                 {
                     e.Cancel = true;
                     return;
                 }
-                    
             }
 
-            repository.RemoveAll();      
+            _repository.RemoveAll();      
         }
 
-        private void ListBoxCustom_Drop(object sender, DragEventArgs e)
+        private async void ListBoxCustom_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = ((string[])e.Data.GetData(DataFormats.FileDrop))
                     .Where(i => i.EndsWith(".xlsx")).ToArray();
-                _repositoryDialog.Add(files);
+                await _repositoryDialog.AddWithShowProgressAsync(files);
             }
         }
     }

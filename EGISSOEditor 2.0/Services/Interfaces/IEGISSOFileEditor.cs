@@ -1,30 +1,31 @@
-﻿using EGISSOEditor_2._0.Services.Structs;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using EGISSOEditor_2._0.Services.Structs;
 
 namespace EGISSOEditor_2._0.Services.Interfaces
 {
     interface IEGISSOFileEditor<T> where T: class
     {
-        bool ValidateFile(string path);
+        bool IsValidateFile(string path);
 
-        bool ValidateFile(T path);
+        bool IsValidateFile(T path);
+
+        Task<bool> IsValidateFileAsync(string path, IProgress<float> progress, CancellationToken cancel);
+
+        Task<bool> IsValidateFileAsync(T path, IProgress<float> progress, CancellationToken cancel);
 
         void FilesStyleCorrection(IEnumerable<T> file);
 
-        Task FilesStyleCorrectionAsync(IEnumerable<T> file, IProgress<EGISSOFilesEditProgess> progress, CancellationToken cancel);
+        Task FilesStyleCorrectionAsync(IEnumerable<T> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel);
 
-        void CorrectionErrorsFiles(IEnumerable<T> file);
+        void ValidateFiles(IEnumerable<T> file);
 
-        Task CorrectionErrorsFilesAsync(IEnumerable<T> file, IProgress<EGISSOFilesEditProgess> progress, CancellationToken cancel);
+        Task ValidateFilesAsync(IEnumerable<T> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel);
 
         T MergingFiles(IEnumerable<T> file);
 
-        Task<T> MergingFilesAsync(IEnumerable<T> file, IProgress<EGISSOFilesEditProgess> progress, CancellationToken cancel);
+        Task<T> MergingFilesAsync(IEnumerable<T> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel);
     }
 }
