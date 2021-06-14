@@ -40,11 +40,11 @@
                         <Setter Property="FontSize" Value="12"/>
                     </Style>
                 </Grid.Resources>
-                
-                <StackPanel Margin="0,10,0,0">
+
+                <StackPanel Margin="0,5,0,0">
                     <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
                         <TextBlock Text="Текущий элемент:" Padding="0,0,5,0"/>
-                        <TextBlock x:Name="tbProcessCurrentFile" Text="{Binding ProcessCurrentFile}"/>
+                        <TextBlock x:Name="tbProcessCurrentFile" Text="{Binding ProcessCurrentFile}" ToolTip="{Binding ProcessCurrentFile}"/>
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <Style.Triggers>
@@ -69,7 +69,7 @@
                             </Style>
                         </StackPanel.Style>
                     </StackPanel>
-                    <Grid>
+                    <Grid >
                         <ProgressBar x:Name="progressbar" Foreground="#FF00AAEA" 
                                  Value="{Binding Value}" Minimum="0" Maximum="1"/>
                         <TextBlock Text="{Binding Value, ElementName=progressbar, StringFormat={}{0:p1}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>

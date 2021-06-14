@@ -114,9 +114,6 @@
                         </Grid>
                     </Grid>
                     
-                   
-                    
-                    
                 </DataTemplate>
             </Grid.Resources>
 
@@ -129,7 +126,10 @@
                                     AllowDrop="True" DragDrop.Drop="ListBoxCustom_Drop">
                 <controls:ListBoxCustom.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel/>
+                        <WrapPanel VirtualizingPanel.IsVirtualizing="True" 
+                                   VirtualizingPanel.CacheLength="20"
+                                   VirtualizingPanel.VirtualizationMode="Recycling" 
+                                   VirtualizingPanel.IsContainerVirtualizable="True"/>
                     </ItemsPanelTemplate>
                 </controls:ListBoxCustom.ItemsPanel>
             </controls:ListBoxCustom>
