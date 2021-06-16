@@ -31,7 +31,6 @@ namespace EGISSOEditor_2._0.Views.Windows
             set => SetValue(ValueProperty, value);
         }
 
-
         private static readonly DependencyProperty ProcessNameProperty =
             DependencyProperty.Register(
             nameof(ProcessName), typeof(string), typeof(ProgressWindow));
@@ -62,6 +61,8 @@ namespace EGISSOEditor_2._0.Views.Windows
             set => SetValue(ProcessedFilesProperty, value);
         }
 
+        public bool IsCancel { get; set; }
+
         private IProgress<ProcedureFilesProgess> _progress;
         public IProgress<ProcedureFilesProgess> Progress => _progress ??= new Progress<ProcedureFilesProgess>((v) =>
         {
@@ -73,7 +74,6 @@ namespace EGISSOEditor_2._0.Views.Windows
             if (v.IsEndOfProcessed)
                 this.Close();
         });
-
 
         private CancellationTokenSource _cancellationSource;
 
@@ -95,6 +95,13 @@ namespace EGISSOEditor_2._0.Views.Windows
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _cancellationSource?.Cancel();
+
+            if (!IsCancel)
+            {
+                ProcessName = "Отмена...";
+                progressbar.IsIndeterminate = true;
+                e.Cancel = true;
+            }
         }
     }
 }

@@ -16,15 +16,18 @@ namespace EGISSOEditor_2._0.Services
         public (IProgress<ProcedureFilesProgess> progress, CancellationToken cancel, Action close) ShowProgress()
         {
             var parent_window = App.ActiveWindow ?? App.MainWindow;
-            var _progressWindow = new ProgressWindow()
+            var progressWindow = new ProgressWindow()
             {
                 Owner = parent_window,
             };
 
             parent_window.IsEnabled = false;
-            _progressWindow.Show();
+            progressWindow.Show();
 
-            return (_progressWindow.Progress, _progressWindow.Cancellation, () => { _progressWindow.Close(); parent_window.IsEnabled = true; });
+            return (progressWindow.Progress, progressWindow.Cancellation, () => { 
+                progressWindow.IsCancel = true; 
+                progressWindow.Close(); 
+                parent_window.IsEnabled = true; });
         }
 
 

@@ -31,7 +31,7 @@
                         <GradientStop Color="White" Offset="0.821"/>
                     </LinearGradientBrush>
                 </Grid.Background>
-                <TextBlock x:Name="tbProcessName" Padding="12,0,0,0" Text ="{Binding ProcessName}" FontSize="18" VerticalAlignment="Center"/>
+                <TextBlock x:Name="tbProcessName" Padding="12,0,0,0" Text ="{Binding ProcessName}" FontSize="16" VerticalAlignment="Center"/>
             </Grid>
 
             <Grid Grid.Row="1" Margin="10,5,10,10">
@@ -41,9 +41,9 @@
                     </Style>
                 </Grid.Resources>
 
-                <StackPanel Margin="0,5,0,0">
+                <StackPanel Margin="0,8,0,0">
                     <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
-                        <TextBlock Text="Текущий элемент:" Padding="0,0,5,0"/>
+                        <TextBlock Text="Текущий элемент:" Padding="0,0,8,0"/>
                         <TextBlock x:Name="tbProcessCurrentFile" Text="{Binding ProcessCurrentFile}" ToolTip="{Binding ProcessCurrentFile}"/>
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
@@ -57,7 +57,7 @@
                         
                     </StackPanel>
                     <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
-                        <TextBlock Text="Выполнено:" Padding="0,0,5,0"/>
+                        <TextBlock Text="Выполнено:" Padding="0,0,8,0"/>
                         <TextBlock x:Name="tbProcessedFiles" Text="{Binding ProcessedFiles}"/>
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
@@ -70,9 +70,19 @@
                         </StackPanel.Style>
                     </StackPanel>
                     <Grid >
-                        <ProgressBar x:Name="progressbar" Foreground="#FF00AAEA" 
-                                 Value="{Binding Value}" Minimum="0" Maximum="1"/>
-                        <TextBlock Text="{Binding Value, ElementName=progressbar, StringFormat={}{0:p1}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <ProgressBar x:Name="progressbar" Foreground="#FF00AAEA"
+                                 Value="{Binding Value}" Minimum="0" Maximum="1" Height="20"/>
+                        <TextBlock Text="{Binding Value, ElementName=progressbar, StringFormat={}{0:p1}}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsIndeterminate, ElementName=progressbar}" Value="true">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </Grid>
                     
                 </StackPanel>

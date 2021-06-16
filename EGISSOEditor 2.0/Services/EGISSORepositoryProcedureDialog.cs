@@ -59,24 +59,14 @@ namespace EGISSOEditor_2._0.Services
                 throw new ArgumentNullException(nameof(Repository));
 
             ProcedureFilesProgess progressValue = new ProcedureFilesProgess("Добавление файлов", default, 0, files.Length, 0f, 0f);
-            float partFileProgress = 1f / progressValue.TotalFiles;
-            float currentTotalProgress = progressValue.TotalFilesProgress;
-
-            IProgress<float> progressValidate = new Progress<float>((v) =>
-            {
-                progressValue.CurrentFileProgress = v;
-                progressValue.TotalFilesProgress = currentTotalProgress + v * partFileProgress;
-                progress?.Report(progressValue);
-            });
-
+            
             foreach (string file in files)
             {
                 progressValue.CurrentFileName = file.ToString();
-                currentTotalProgress = progressValue.TotalFilesProgress;
                 progress?.Report(progressValue);
                 try
                 {
-                    var result = await _EGISSOEditor.IsValidateFileAsync(file, progressValidate, cancel);
+                    var result = await _EGISSOEditor.IsValidateFileAsync(file, null, cancel);
                     if (!result)
                     {
                         _userDialog.ShowMessage($"Некорректный файл - {file}!", "Добавление файла", ShowMessageIcon.Error, ShowMessageButtons.Ok);
