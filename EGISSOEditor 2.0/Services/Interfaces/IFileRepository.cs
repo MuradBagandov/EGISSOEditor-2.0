@@ -8,6 +8,8 @@ namespace EGISSOEditor_2._0.Services.Interfaces
 
         bool Add(string path);
 
+        bool Exist(string path);
+
         bool Remove(T element);
 
         void RemoveAll();
@@ -17,7 +19,5 @@ namespace EGISSOEditor_2._0.Services.Interfaces
         void SaveAs(T element, string newDirectory);
 
         void SaveAll();
-
-
     }
 }

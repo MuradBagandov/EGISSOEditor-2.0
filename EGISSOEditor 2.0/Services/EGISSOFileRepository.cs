@@ -27,7 +27,7 @@ namespace EGISSOEditor_2._0.Services
             if (!File.Exists(path))
                 throw new ArgumentException($"Файл {path} не найден!");
 
-            if (_items.Any(i => i.Directory == path))
+            if (Exist(path))
                 throw new ArgumentException($"Файл {path} уже добавлен!");
 
             if (path.IndexOf(_directoryTemplate) != -1)
@@ -46,6 +46,8 @@ namespace EGISSOEditor_2._0.Services
             File.SetAttributes(tempPath, FileAttributes.Hidden);
             return true;
         }
+
+        public bool Exist(string path) => _items.Any(i => i.Directory == path);
 
         public bool Remove(EGISSOFile element)
         {

@@ -32,6 +32,8 @@ namespace EGISSOEditor_2._0.Services
             {
                 try
                 {
+                    if (Repository.Exist(file))
+                        throw new ArgumentException($"Файл {file} уже добавлен!");
                     if (!_EGISSOEditor.IsValidateFile(file))
                     {
                         _userDialog.ShowMessage($"Некорректный файл - {file}!", "Добавление файла", ShowMessageIcon.Error, ShowMessageButtons.Ok);
@@ -55,9 +57,11 @@ namespace EGISSOEditor_2._0.Services
 
             foreach (string file in files)
             {
-                progressValue.CurrentElementName = file.ToString();
+                progressValue.CurrentElementName = file;
                 try
                 {
+                    if (Repository.Exist(file))
+                        throw new ArgumentException($"Файл {file} уже добавлен!");
                     var result = await _EGISSOEditor.IsValidateFileAsync(file, null, cancel);
                     if (!result)
                     {
