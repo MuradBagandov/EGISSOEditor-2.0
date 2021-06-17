@@ -13,7 +13,7 @@ namespace EGISSOEditor_2._0.Services
 {
     internal class UserDialog : Interfaces.IUserDialog
     {
-        public (IProgress<ProcedureFilesProgess> progress, CancellationToken cancel, Action close) ShowProgress()
+        public (IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel, Action close) ShowProgress()
         {
             var parent_window = App.ActiveWindow ?? App.MainWindow;
             var progressWindow = new ProgressWindow()

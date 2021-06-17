@@ -12,7 +12,7 @@ namespace EGISSOEditor_2._0.Services.Interfaces
 {
     internal interface IUserDialog
     {
-        (IProgress<ProcedureFilesProgess> progress, CancellationToken cancel, Action close) ShowProgress();
+        (IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel, Action close) ShowProgress();
 
         DialogResult ShowMessage(string text, string title, ShowMessageIcon icon, ShowMessageButtons buttons, Window owner = null);
 

@@ -46,24 +46,16 @@ namespace EGISSOEditor_2._0.Services
             }
         }
 
-        public async Task AddWithShowProgressAsync(string[] files)
-        {
-            var (progress, cancel, close) = _userDialog.ShowProgress();
-            await AddAsync(files, progress, cancel);
-            close();
-        }
-
-        public async Task AddAsync(string[] files, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel)
+        public async Task AddAsync(string[] files, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
         {
             if (Repository == null)
                 throw new ArgumentNullException(nameof(Repository));
 
-            ProcedureFilesProgess progressValue = new ProcedureFilesProgess("Добавление файлов", default, 0, files.Length, 0f, 0f);
-            
+            var progressValue = new ProcedureElementsProgessReporter(progress, "Добавление файлов", files.Length);
+
             foreach (string file in files)
             {
-                progressValue.CurrentFileName = file.ToString();
-                progress?.Report(progressValue);
+                progressValue.CurrentElementName = file.ToString();
                 try
                 {
                     var result = await _EGISSOEditor.IsValidateFileAsync(file, null, cancel);
@@ -84,12 +76,15 @@ namespace EGISSOEditor_2._0.Services
                     _userDialog.ShowMessage(e.Message, "Добавление файла", ShowMessageIcon.Error, ShowMessageButtons.Ok);
                 }
 
-                progressValue.ProcessedFiles += 1;
-                progressValue.TotalFilesProgress = (float)progressValue.ProcessedFiles / progressValue.TotalFiles;
-                progress?.Report(progressValue);
+                progressValue.ProcessedElements++;
             }
-            progressValue.IsEndOfProcessed = true;
-            progress?.Report(progressValue);
+        }
+
+        public async Task AddWithShowProgressAsync(string[] files)
+        {
+            var (progress, cancel, close) = _userDialog.ShowProgress();
+            await AddAsync(files, progress, cancel);
+            close();
         }
 
         public void Remove(IEnumerable<EGISSOFile> elements)
@@ -120,30 +115,18 @@ namespace EGISSOEditor_2._0.Services
             }
         }
 
-        public async Task RemoveWithShowProgressAsync(IEnumerable<EGISSOFile> elements)
-        {
-            var (progress, cancel, close) = _userDialog.ShowProgress();
-            try
-            {
-                await RemoveAsync(elements, progress, cancel);
-            }
-            catch (OperationCanceledException) { }
-            finally { close(); }
-        }
-
-        public async Task RemoveAsync(IEnumerable<EGISSOFile> elements, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel)
+        public async Task RemoveAsync(IEnumerable<EGISSOFile> elements, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
         {
             if (Repository == null)
                 throw new ArgumentNullException(nameof(Repository));
 
-            ProcedureFilesProgess progressValue = new ProcedureFilesProgess("Удаление файлов", default, 0, elements.Count(), 0f, 0f);
+            var progressValue = new ProcedureElementsProgessReporter(progress, "Удаление файлов", elements.Count());
 
             foreach (var item in elements.ToArray())
             {
                 await Task.Delay(1);
                 cancel.ThrowIfCancellationRequested();
-                progressValue.CurrentFileName = item.Name;
-                progress?.Report(progressValue);
+                progressValue.CurrentElementName = item.Name;
 
                 if (item.IsFileChanged)
                 {
@@ -163,13 +146,21 @@ namespace EGISSOEditor_2._0.Services
                     _userDialog.ShowMessage(e.Message, "Удаление", ShowMessageIcon.Error, ShowMessageButtons.Ok);
                 }
 
-                progressValue.ProcessedFiles += 1;
-                progressValue.TotalFilesProgress = (float)progressValue.ProcessedFiles / progressValue.TotalFiles;
-                progress?.Report(progressValue);
+                progressValue.ProcessedElements++;
             }
-            progressValue.IsEndOfProcessed = true;
-            progress?.Report(progressValue);
         }
+
+        public async Task RemoveWithShowProgressAsync(IEnumerable<EGISSOFile> elements)
+        {
+            var (progress, cancel, close) = _userDialog.ShowProgress();
+            try
+            {
+                await RemoveAsync(elements, progress, cancel);
+            }
+            catch (OperationCanceledException) { }
+            finally { close(); }
+        }
+
         public void Save(IEnumerable<EGISSOFile> elements)
         {
             if (Repository == null)
@@ -188,18 +179,18 @@ namespace EGISSOEditor_2._0.Services
             }
         }
 
-        public async Task SaveAsync(IEnumerable<EGISSOFile> elements, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel)
+        public async Task SaveAsync(IEnumerable<EGISSOFile> elements, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
         {
             if (Repository == null)
                 throw new ArgumentNullException(nameof(Repository));
 
-            ProcedureFilesProgess progressValue = new ProcedureFilesProgess("Сохранение файлов", default, 0, elements.Count(), 0f, 0f);
+            var progressValue = new ProcedureElementsProgessReporter(progress, "Сохранение файлов", elements.Count());
+
             foreach (var item in elements.ToArray())
             {
                 await Task.Delay(1);
                 cancel.ThrowIfCancellationRequested();
-                progressValue.CurrentFileName = item.Name;
-                progress?.Report(progressValue);
+                progressValue.CurrentElementName = item.Name;
                 try
                 {
                     Repository.Save(item);
@@ -209,12 +200,8 @@ namespace EGISSOEditor_2._0.Services
                     _userDialog.ShowMessage(e.Message, "Cохранение", ShowMessageIcon.Error, ShowMessageButtons.Ok);
                 }
 
-                progressValue.ProcessedFiles += 1;
-                progressValue.TotalFilesProgress = (float)progressValue.ProcessedFiles / progressValue.TotalFiles;
-                progress?.Report(progressValue);
+                progressValue.ProcessedElements++;
             }
-            progressValue.IsEndOfProcessed = true;
-            progress?.Report(progressValue);
         }
 
         public async Task SaveWithShowProgressAsync(IEnumerable<EGISSOFile> elements)
@@ -244,6 +231,5 @@ namespace EGISSOEditor_2._0.Services
         }
 
         private void Save(EGISSOFile elements) => Save(new List<EGISSOFile>() { elements });
-
     }
 }

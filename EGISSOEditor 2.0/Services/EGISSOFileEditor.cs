@@ -36,7 +36,7 @@ namespace EGISSOEditor_2._0.Services
             throw new NotImplementedException();
         }
 
-        public Task ValidateFilesAsync(IEnumerable<EGISSOFile> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel)
+        public Task ValidateFilesAsync(IEnumerable<EGISSOFile> file, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
         {
             throw new NotImplementedException();
         }
@@ -46,7 +46,7 @@ namespace EGISSOEditor_2._0.Services
             throw new NotImplementedException();
         }
 
-        public Task FilesStyleCorrectionAsync(IEnumerable<EGISSOFile> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel)
+        public Task FilesStyleCorrectionAsync(IEnumerable<EGISSOFile> file, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
         {
             throw new NotImplementedException();
         }
@@ -56,7 +56,7 @@ namespace EGISSOEditor_2._0.Services
             throw new NotImplementedException();
         }
 
-        public Task<EGISSOFile> MergingFilesAsync(IEnumerable<EGISSOFile> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel)
+        public Task<EGISSOFile> MergingFilesAsync(IEnumerable<EGISSOFile> file, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
         {
             throw new NotImplementedException();
         }

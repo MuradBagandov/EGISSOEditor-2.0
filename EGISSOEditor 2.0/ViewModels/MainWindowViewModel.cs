@@ -69,8 +69,15 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private bool CanRemoveFileCommandExecute(object p) => SelectedFiles?.Count > 0;
         
-        private async void OnRemoveFileCommandExecuted(object p)=>
-            await _repositoryProcedureDialog.RemoveWithShowProgressAsync(SelectedFiles.Select(i => (EGISSOFile)i));
+        private async void OnRemoveFileCommandExecuted(object p)
+        {
+            IEnumerable<EGISSOFile> itemsRemove = SelectedFiles.Select(i => (EGISSOFile)i);
+            if (itemsRemove.Count() > 10)
+                await _repositoryProcedureDialog.RemoveWithShowProgressAsync(itemsRemove);
+            else
+                await _repositoryProcedureDialog.RemoveAsync(itemsRemove, null, default);
+        }
+            
 
         #endregion
 
@@ -91,8 +98,15 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private bool CanSaveFileCommandExecute(object p) => SelectedFiles?.Count > 0;
 
-        private async void OnSaveFileCommandExecuted(object p)=>
-            await _repositoryProcedureDialog.SaveWithShowProgressAsync(SelectedFiles.Select(i => (EGISSOFile)i));
+        private async void OnSaveFileCommandExecuted(object p)
+        {
+            IEnumerable<EGISSOFile> itemsSave = SelectedFiles.Select(i => (EGISSOFile)i);
+            if (itemsSave.Count() > 10)
+                await _repositoryProcedureDialog.SaveWithShowProgressAsync(itemsSave);
+            else
+                await _repositoryProcedureDialog.SaveAsync(itemsSave, null, default);
+        }
+            
 
         #endregion
 

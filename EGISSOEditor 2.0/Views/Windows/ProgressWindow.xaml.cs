@@ -63,13 +63,13 @@ namespace EGISSOEditor_2._0.Views.Windows
 
         public bool IsCancel { get; set; }
 
-        private IProgress<ProcedureFilesProgess> _progress;
-        public IProgress<ProcedureFilesProgess> Progress => _progress ??= new Progress<ProcedureFilesProgess>((v) =>
+        private IProgress<ProcedureElementsProgessReporter> _progress;
+        public IProgress<ProcedureElementsProgessReporter> Progress => _progress ??= new Progress<ProcedureElementsProgessReporter>((v) =>
         {
-            Value = v.TotalFilesProgress;
+            Value = v.TotalElementsProgress;
             ProcessName = v.ProcessName;
-            ProcessCurrentFile = v.CurrentFileName;
-            ProcessedFiles = $"{v.ProcessedFiles} из {v.TotalFiles}";
+            ProcessCurrentFile = v.CurrentElementName;
+            ProcessedFiles = $"{v.ProcessedElements} из {v.TotalElements}";
 
             if (v.IsEndOfProcessed)
                 this.Close();

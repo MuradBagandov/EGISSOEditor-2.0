@@ -18,14 +18,14 @@ namespace EGISSOEditor_2._0.Services.Interfaces
 
         void FilesStyleCorrection(IEnumerable<T> file);
 
-        Task FilesStyleCorrectionAsync(IEnumerable<T> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel);
+        Task FilesStyleCorrectionAsync(IEnumerable<T> file, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel);
 
         void ValidateFiles(IEnumerable<T> file);
 
-        Task ValidateFilesAsync(IEnumerable<T> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel);
+        Task ValidateFilesAsync(IEnumerable<T> file, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel);
 
         T MergingFiles(IEnumerable<T> file);
 
-        Task<T> MergingFilesAsync(IEnumerable<T> file, IProgress<ProcedureFilesProgess> progress, CancellationToken cancel);
+        Task<T> MergingFilesAsync(IEnumerable<T> file, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel);
     }
 }

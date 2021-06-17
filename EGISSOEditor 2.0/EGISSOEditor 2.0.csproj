@@ -239,7 +239,7 @@
     <Compile Include="Services\Interfaces\IFileRepository.cs" />
     <Compile Include="Services\Interfaces\IRepositoryProcedureDialog.cs" />
     <Compile Include="Services\Interfaces\IUserDialog.cs" />
-    <Compile Include="Services\Structs\ProcedureFilesProgess.cs" />
+    <Compile Include="Services\Structs\ProcedureElementsProgessReporter.cs" />
     <Compile Include="Services\UserDialog.cs" />
     <Compile Include="ViewModels\Base\ViewModel.cs" />
     <Compile Include="Views\Windows\MessageDialog.xaml.cs">
