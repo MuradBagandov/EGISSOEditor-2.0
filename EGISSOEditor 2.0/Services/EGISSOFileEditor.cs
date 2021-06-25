@@ -21,10 +21,18 @@ namespace EGISSOEditor_2._0.Services
         public EGISSOFileEditor()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            if (File.Exists("Resources\\Шаблон.xlsx"))
-                _patternPackage = new ExcelPackage(new FileInfo("Resources\\Шаблон.xlsx"));
-        }
 
+            if (!File.Exists("Resources\\Шаблон.xlsx"))
+            {
+                Directory.CreateDirectory("Resources");
+                using (FileStream file = File.Create("Resources\\Шаблон.xlsx"))
+                {
+                    file.Write(Properties.Resources.Шаблон, 0, Properties.Resources.Шаблон.Count());
+                }
+            }
+            _patternPackage = new ExcelPackage(new FileInfo("Resources\\Шаблон.xlsx"));
+        }
+           
         public bool IsValidateFile(string path)=> ValidateFile(path, default, default);
 
         public bool IsValidateFile(EGISSOFile path) => IsValidateFile(path.Directory);
@@ -132,7 +140,7 @@ namespace EGISSOEditor_2._0.Services
                 cancel.ThrowIfCancellationRequested();
                 using (ExcelPackage filePackage = new ExcelPackage(new FileInfo(item.TemplateDirectory)))
                 {
-                    reporter.CurrentElementProgress = 0.1f;
+                    reporter.CurrentElementProgress = 0.2f;
                     cancel.ThrowIfCancellationRequested();
                     ExcelWorksheet mainWorkSheet;
                     itemWorkBook = filePackage.Workbook;
@@ -176,6 +184,7 @@ namespace EGISSOEditor_2._0.Services
                     {
                         var columnRange = mainWorkSheet.Cells[7, column, CountMainWorkSheetRow + 6, column];
                         var cellPattern = patternWorkSheet.Cells[7, column];
+                        columnRange.Style.Numberformat.Format = cellPattern.Style.Numberformat.Format;
                         columnRange.Style.HorizontalAlignment = cellPattern.Style.HorizontalAlignment;
                         columnRange.Style.VerticalAlignment = cellPattern.Style.VerticalAlignment;
                         columnRange.Style.Font.Bold = cellPattern.Style.Font.Bold;
