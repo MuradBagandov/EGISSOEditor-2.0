@@ -140,6 +140,36 @@ namespace EGISSOEditor_2._0.ViewModels
 
         #endregion
 
+
+        #region FilesStyleCorrectionCommand
+
+        public ICommand FilesStyleCorrectionCommand { get; set; }
+
+        private bool CanFilesStyleCorrectionExecute(object p) => SelectedFiles.Count > 0;
+
+        private async void OnFilesStyleCorrectionExecuted(object p)
+        {
+            var(progress, cancel, close) = _userDialog.ShowProgress();
+            try
+            {
+                await _EGISSOEditor.FilesStyleCorrectionAsync(SelectedFiles.Select(i => (EGISSOFile)i), progress, cancel);
+            }
+            catch (OperationCanceledException e)
+            {
+            }
+            catch (Exception e)
+            {
+                _userDialog.ShowMessage("Executed", "1", Services.Enums.ShowMessageIcon.Infomation, Services.Enums.ShowMessageButtons.Ok);
+            }
+            finally
+            {
+                close?.Invoke();
+            }
+        }
+
+
+        #endregion
+
         #endregion
 
         public MainWindowViewModel(IFileRepository<EGISSOFile> fileRepository, IRepositoryProcedureDialog<EGISSOFile> repositoryProcedureDialog, IEGISSOFileEditor<EGISSOFile> EGISSOEditor, IUserDialog userDialog)
@@ -150,6 +180,7 @@ namespace EGISSOEditor_2._0.ViewModels
             SaveFileCommand = new LambdaCommand(OnSaveFileCommandExecuted, CanSaveFileCommandExecute);
             SaveAsFileCommand = new LambdaCommand(OnSaveAsFileCommandExecuted, CanSaveAsFileCommandExecute);
             SaveAllFileCommand = new LambdaCommand(OnSaveAllFileCommandExecuted, CanSaveAllFileCommandExecute);
+            FilesStyleCorrectionCommand = new LambdaCommand(OnFilesStyleCorrectionExecuted, CanFilesStyleCorrectionExecute);
 
             _fileRepository = fileRepository;
             _repositoryProcedureDialog = repositoryProcedureDialog;

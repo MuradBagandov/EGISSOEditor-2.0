@@ -27,6 +27,7 @@ namespace EGISSOEditor_2._0.Services.Structs
             get => _processedElements;
             set
             {
+                _currentElementProgress = 0;
                 _processedElements = value;
                 Changed();
             }
@@ -34,17 +35,17 @@ namespace EGISSOEditor_2._0.Services.Structs
 
         public int TotalElements { get; }
 
-        private int _currentElementProgress;
-        public int CurrentElementProgress
+        private float _currentElementProgress;
+        public float CurrentElementProgress
         {
             get => _currentElementProgress;
             set
             {
-                _currentElementProgress = value;
+                _currentElementProgress = (float)Math.Max(0.0, Math.Min(1.0, value));
                 Changed();
             }
         }
-        public float TotalElementsProgress => (float)ProcessedElements / TotalElements + 1f/ TotalElements * CurrentElementProgress;
+        public float TotalElementsProgress => (float)ProcessedElements / TotalElements + (1f/ TotalElements * CurrentElementProgress);
         public bool IsEndOfProcessed => ProcessedElements >= TotalElements;
 
         private IProgress<ProcedureElementsProgessReporter> _reporter;

@@ -53,6 +53,9 @@
             <Button Command="{Binding RemoveFilesCommand}" ToolTip="Удалить все">
                 <Image Source="../../Resources/Icons/File_remove_all_1.png"/>
             </Button>
+            <Button Command="{Binding FilesStyleCorrectionCommand}" ToolTip="Корректировать шаблон">
+                <Image Source="../../Resources/Icons/File_edit_1.png"/>
+            </Button>
         </StackPanel>
 
         <DockPanel Grid.Row="2">
