@@ -23,37 +23,14 @@ namespace EGISSOEditor_2._0.Services
             _EGISSOEditor = EGISSOEditor;
         }
 
-        public void Add(string[] files)
-        {
-            if (Repository == null)
-                throw new ArgumentNullException(nameof(Repository));
-
-            foreach (string file in files)
-            {
-                try
-                {
-                    if (Repository.Exist(file))
-                        throw new ArgumentException($"Файл {file} уже добавлен!");
-                    if (!_EGISSOEditor.IsValidateFile(file))
-                    {
-                        _userDialog.ShowMessage($"Некорректный файл - {file}!", "Добавление файла", ShowMessageIcon.Error, ShowMessageButtons.Ok);
-                        continue;
-                    }
-                    Repository.Add(file);
-                }
-                catch (Exception e)
-                {
-                    _userDialog.ShowMessage(e.Message, "Добавление файла", ShowMessageIcon.Error, ShowMessageButtons.Ok);
-                }
-            }
-        }
-
         public async Task AddAsync(string[] files, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
         {
             if (Repository == null)
                 throw new ArgumentNullException(nameof(Repository));
 
             var progressValue = new ProcedureElementsProgessReporter(progress, "Добавление файлов", files.Length);
+
+            //List<string>
 
             foreach (string file in files)
             {
@@ -91,40 +68,14 @@ namespace EGISSOEditor_2._0.Services
             close();
         }
 
-        public void Remove(IEnumerable<EGISSOFile> elements)
-        {
-            if (Repository == null)
-                throw new ArgumentNullException(nameof(Repository));
-
-
-            foreach (var item in elements.ToArray())
-            {
-                if (item.IsFileChanged)
-                {
-                    var dialogResult = _userDialog.ShowMessage($"Файл {item.Name} был изменен! Сохранить изменения?", "Удаление", ShowMessageIcon.Infomation, ShowMessageButtons.YesNoCancel);
-
-                    if (dialogResult == DialogResult.Yes)
-                        Save(item);
-                    else if (dialogResult == DialogResult.Cancel)
-                        return;
-                }
-                try
-                {
-                    Repository.Remove(item);
-                }
-                catch (Exception e)
-                {
-                    _userDialog.ShowMessage(e.Message, "Удаление", ShowMessageIcon.Error, ShowMessageButtons.Ok);
-                }
-            }
-        }
-
         public async Task RemoveAsync(IEnumerable<EGISSOFile> elements, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
         {
             if (Repository == null)
                 throw new ArgumentNullException(nameof(Repository));
 
             var progressValue = new ProcedureElementsProgessReporter(progress, "Удаление файлов", elements.Count());
+
+            DialogResult? dialogResult = DialogResult.None;
 
             foreach (var item in elements.ToArray())
             {
@@ -134,10 +85,11 @@ namespace EGISSOEditor_2._0.Services
 
                 if (item.IsFileChanged)
                 {
-                    var dialogResult = _userDialog.ShowMessage($"Файл {item.Name} был изменен! Сохранить изменения?", "Удаление", ShowMessageIcon.Infomation, ShowMessageButtons.YesNoCancel);
+                    if (dialogResult != DialogResult.YesForAll && dialogResult != DialogResult.NoForAll)
+                         dialogResult = _userDialog.ShowMessage($"Файл {item.Name} был изменен! Сохранить изменения?", "Удаление", ShowMessageIcon.Infomation, ShowMessageButtons.YesNoCancelForAll);
 
-                    if (dialogResult == DialogResult.Yes)
-                        Save(item);
+                    if (dialogResult == DialogResult.Yes || dialogResult == DialogResult.YesForAll)
+                        Repository.Save(item);
                     else if (dialogResult == DialogResult.Cancel)
                         return;
                 }
@@ -163,24 +115,6 @@ namespace EGISSOEditor_2._0.Services
             }
             catch (OperationCanceledException) { }
             finally { close(); }
-        }
-
-        public void Save(IEnumerable<EGISSOFile> elements)
-        {
-            if (Repository == null)
-                throw new ArgumentNullException(nameof(Repository));
-
-            foreach (var item in elements.ToArray())
-            {
-                try
-                {
-                    Repository.Save(item);
-                }
-                catch (Exception e)
-                {
-                    _userDialog.ShowMessage(e.Message, "Cохранение", ShowMessageIcon.Error, ShowMessageButtons.Ok);
-                }  
-            }
         }
 
         public async Task SaveAsync(IEnumerable<EGISSOFile> elements, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
@@ -233,7 +167,5 @@ namespace EGISSOEditor_2._0.Services
                 _userDialog.ShowMessage(e.Message, "Cохранение", ShowMessageIcon.Error, ShowMessageButtons.Ok);
             }
         }
-
-        private void Save(EGISSOFile elements) => Save(new List<EGISSOFile>() { elements });
     }
 }

@@ -5,7 +5,9 @@ namespace EGISSOEditor_2._0.Services.Enums
     {
         Ok,
         YesNo,
+        YesNoForAll,
         OkCancel,
-        YesNoCancel
+        YesNoCancel,
+        YesNoCancelForAll
     }
 }

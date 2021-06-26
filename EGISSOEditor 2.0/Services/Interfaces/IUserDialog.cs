@@ -14,7 +14,7 @@ namespace EGISSOEditor_2._0.Services.Interfaces
     {
         (IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel, Action close) ShowProgress();
 
-        DialogResult ShowMessage(string text, string title, ShowMessageIcon icon, ShowMessageButtons buttons, Window owner = null);
+        DialogResult ShowMessage(string text, string title = "Message", ShowMessageIcon icon = ShowMessageIcon.None, ShowMessageButtons buttons = ShowMessageButtons.Ok, Window owner = null);
 
     }
 }

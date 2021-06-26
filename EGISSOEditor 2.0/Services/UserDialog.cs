@@ -30,8 +30,7 @@ namespace EGISSOEditor_2._0.Services
                 parent_window.IsEnabled = true; });
         }
 
-
-        public DialogResult ShowMessage(string text, string title, ShowMessageIcon icon, ShowMessageButtons buttons, Window owner = null)
+        public DialogResult ShowMessage(string text, string title = "Message", ShowMessageIcon icon = ShowMessageIcon.None, ShowMessageButtons buttons = ShowMessageButtons.Ok, Window owner = null)
         {
             var dialog = new MessageDialog()
             {

@@ -180,10 +180,11 @@ namespace EGISSOEditor_2._0.Services
                     mainWorkSheet = newMainWorkSheet;
                     reporter.CurrentElementProgress = 0.6f;
                     var patternWorkSheet = _patternPackage.Workbook.Worksheets.FirstOrDefault();
+                    ExcelRange columnRange, cellPattern;
                     for (int column = 1; column <= 56; column++)
                     {
-                        var columnRange = mainWorkSheet.Cells[7, column, CountMainWorkSheetRow + 6, column];
-                        var cellPattern = patternWorkSheet.Cells[7, column];
+                        columnRange = mainWorkSheet.Cells[7, column, CountMainWorkSheetRow + 6, column];
+                        cellPattern = patternWorkSheet.Cells[7, column];
                         columnRange.Style.Numberformat.Format = cellPattern.Style.Numberformat.Format;
                         columnRange.Style.HorizontalAlignment = cellPattern.Style.HorizontalAlignment;
                         columnRange.Style.VerticalAlignment = cellPattern.Style.VerticalAlignment;
@@ -198,6 +199,7 @@ namespace EGISSOEditor_2._0.Services
                         columnRange.Style.Font.UnderLine = cellPattern.Style.Font.UnderLine;
                         columnRange.Style.Font.UnderLineType = cellPattern.Style.Font.UnderLineType;
                         columnRange.Style.Font.VerticalAlign = cellPattern.Style.Font.VerticalAlign;
+                        columnRange.Style.WrapText = cellPattern.Style.WrapText;
                         mainWorkSheet.Column(column).Width = patternWorkSheet.Column(column).Width;
                     }
                     reporter.CurrentElementProgress = 0.8f;

@@ -97,33 +97,36 @@ namespace EGISSOEditor_2._0.Views.Windows
             btnNo.Visibility = Visibility.Visible;
             btnCancel.Visibility = Visibility.Visible;
             btnOk.Visibility = Visibility.Visible;
+            chbForAll.Visibility = Visibility.Visible;
 
             switch (MessageButtons)
             {
-                case ShowMessageButtons.YesNo:CollapseButton(btnCancel, btnOk);break;
-                case ShowMessageButtons.YesNoCancel: CollapseButton(btnOk); break;
-                case ShowMessageButtons.Ok:CollapseButton(btnCancel, btnYes, btnNo);break;
-                case ShowMessageButtons.OkCancel: CollapseButton(btnYes, btnNo); break;
+                case ShowMessageButtons.YesNo:CollapseButton(btnCancel, btnOk, chbForAll);break;
+                case ShowMessageButtons.YesNoForAll: CollapseButton(btnCancel, btnOk); break;
+                case ShowMessageButtons.YesNoCancel: CollapseButton(btnOk, chbForAll); break;
+                case ShowMessageButtons.YesNoCancelForAll: CollapseButton(btnOk); break;
+                case ShowMessageButtons.Ok:CollapseButton(btnCancel, btnYes, btnNo, chbForAll);break;
+                case ShowMessageButtons.OkCancel: CollapseButton(btnYes, btnNo, chbForAll); break;
             }
 
-            void CollapseButton(params Button[] buttons)
+            void CollapseButton(params Control[] controls)
             {
-                foreach (Button btn in buttons)
-                    btn.Visibility = Visibility.Collapsed;
+                foreach (Control control in controls)
+                    control.Visibility = Visibility.Collapsed;
             }
         }
 
 
         private void btnYes_Click(object sender, RoutedEventArgs e)
         {
-            ShowDialogResult = Services.Enums.DialogResult.Yes;
+            ShowDialogResult = chbForAll.IsChecked == true ? Services.Enums.DialogResult.YesForAll: Services.Enums.DialogResult.Yes;
             this.DialogResult = true;
             Close();
         }
 
         private void btnNo_Click(object sender, RoutedEventArgs e)
         {
-            ShowDialogResult = Services.Enums.DialogResult.No;
+            ShowDialogResult = chbForAll.IsChecked == true ? Services.Enums.DialogResult.NoForAll : Services.Enums.DialogResult.No;
             this.DialogResult = true;
             Close();
         }
