@@ -15,6 +15,13 @@
         Height="500" Width="800" MinHeight="400" MinWidth="600"
         Closing="Window_Closing"
         Style="{StaticResource CustomWindowStyle}" WindowStyle="None">
+    <Window.InputBindings>
+        <KeyBinding Key="A" Modifiers="Ctrl"  CommandParameter="{Binding ElementName=lbFiles}">
+            <KeyBinding.Command>
+                <cmd:SelectAllCommand/>
+            </KeyBinding.Command>
+        </KeyBinding>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
@@ -121,7 +128,7 @@
                 </DataTemplate>
             </Grid.Resources>
 
-            <controls:ListBoxCustom Style="{StaticResource ListBox}"
+            <controls:ListBoxCustom Style="{StaticResource ListBox}" x:Name="lbFiles"
                                     ItemsSource="{Binding Files, UpdateSourceTrigger=PropertyChanged}" 
                                     SelectionMode="Extended" 
                                     BindableSelectedItems="{Binding SelectedFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
