@@ -59,17 +59,15 @@ namespace EGISSOEditor_2._0.Services
 
         public async Task FilesStyleCorrectionAsync(IEnumerable<EGISSOFile> files, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel) =>
             await Task.Run(() => FilesStyleCorrection(files, progress, cancel));
+
+
+        public void MergingFiles(IEnumerable<EGISSOFile> files, string mergingFilePath) =>
+            MergingFiles(files, mergingFilePath, default, default);
         
 
-        public EGISSOFile MergingFiles(IEnumerable<EGISSOFile> file)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task MergingFilesAsync(IEnumerable<EGISSOFile> files, string mergingFilePath, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)=>
+            await Task.Run(()=>MergingFiles(files, mergingFilePath, progress, cancel));
 
-        public Task<EGISSOFile> MergingFilesAsync(IEnumerable<EGISSOFile> file, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
-        {
-            throw new NotImplementedException();
-        }
 
         ~EGISSOFileEditor()
         {
@@ -129,6 +127,42 @@ namespace EGISSOEditor_2._0.Services
             return differentes < 40;
         }
 
+
+        private void MergingFiles(IEnumerable<EGISSOFile> files, string mergingFilePath, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
+        {
+            ProcedureElementsProgessReporter reporter = new ProcedureElementsProgessReporter(progress, "Объединение файлов", files.Count());
+            
+            if (files.Any(i => i.Directory == mergingFilePath))
+                throw new ArgumentException("Ошибка объединения файлов!", nameof(mergingFilePath));
+            if (!Directory.Exists(Path.GetDirectoryName(mergingFilePath)))
+                throw new ArgumentException("Указан несуществующий каталог!", nameof(mergingFilePath));
+
+            using (ExcelPackage mergingFile = new ExcelPackage())
+            {
+                foreach (var sheet in _patternPackage.Workbook.Worksheets)
+                    mergingFile.Workbook.Worksheets.Add(sheet.Name, sheet);
+
+                ExcelWorksheet mainMergingFileSheet = mergingFile.Workbook.Worksheets.FirstOrDefault();
+                ExcelWorksheet mainMergedFileSheet;
+                int offsetsRow = 7;
+                cancel.ThrowIfCancellationRequested();
+                foreach (EGISSOFile item in files)
+                {
+                    reporter.CurrentElementName = item.Name;
+
+                    using (ExcelPackage mergedFile = new ExcelPackage(new FileInfo(item.TemplateDirectory)))
+                    {
+                        mainMergedFileSheet = mergedFile.Workbook.Worksheets.FirstOrDefault();
+                        int CountMergedFileRows = RecountRow(mainMergedFileSheet);
+                        mainMergedFileSheet.Cells[7, 1, CountMergedFileRows + 6, 56].Copy(mainMergingFileSheet.Cells[offsetsRow, 1]);
+                        offsetsRow += CountMergedFileRows;
+                    }
+                    cancel.ThrowIfCancellationRequested();
+                    reporter.ProcessedElements++;
+                }
+                mergingFile.SaveAs(new FileInfo(mergingFilePath));
+            }
+        }
 
         private void FilesStyleCorrection(IEnumerable<EGISSOFile> files, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
         {

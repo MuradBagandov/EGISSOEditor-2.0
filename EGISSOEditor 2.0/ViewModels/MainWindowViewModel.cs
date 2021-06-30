@@ -145,9 +145,9 @@ namespace EGISSOEditor_2._0.ViewModels
 
         public ICommand FilesStyleCorrectionCommand { get; set; }
 
-        private bool CanFilesStyleCorrectionExecute(object p) => SelectedFiles.Count > 0;
+        private bool CanFilesStyleCorrectionCommandExecute(object p) => SelectedFiles.Count > 0;
 
-        private async void OnFilesStyleCorrectionExecuted(object p)
+        private async void OnFilesStyleCorrectionCommandExecuted(object p)
         {
             var(progress, cancel, close) = _userDialog.ShowProgress();
             try
@@ -170,6 +170,43 @@ namespace EGISSOEditor_2._0.ViewModels
 
         #endregion
 
+        #region MergingFilesCommand
+
+        public ICommand MergingFilesCommand { get; set; }
+
+        private bool CanMergingFilesCommandExecute(object p) => SelectedFiles.Count > 0;
+
+        private async void OnMergingFilesCommandExecuted(object p)
+        {
+            SaveFileDialog dialog = new SaveFileDialog()
+            {
+                Filter = "Excel xlsx;|*.xlsx;"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                var (progress, cancel, close) = _userDialog.ShowProgress();
+                try
+                {
+                    if (_fileRepository.Exist(dialog.FileName))
+                        throw new Exception($"Файл {dialog.FileName} уже добавлен!");
+
+                    await _EGISSOEditor.MergingFilesAsync(SelectedFiles.Select(i => (EGISSOFile)i), dialog.FileName, progress, cancel);
+                    await _repositoryProcedureDialog.AddWithShowProgressAsync(new string[] { dialog.FileName });
+                }
+                catch (OperationCanceledException e) { }
+                catch (Exception e)
+                {
+                    _userDialog.ShowMessage(e.Message, "Ошибка при объединение файлов", Services.Enums.ShowMessageIcon.Error);
+                }
+                finally
+                {
+                    close?.Invoke();
+                }
+            }
+        }
+        #endregion
+
         #endregion
 
         public MainWindowViewModel(IFileRepository<EGISSOFile> fileRepository, IRepositoryProcedureDialog<EGISSOFile> repositoryProcedureDialog, IEGISSOFileEditor<EGISSOFile> EGISSOEditor, IUserDialog userDialog)
@@ -180,7 +217,8 @@ namespace EGISSOEditor_2._0.ViewModels
             SaveFileCommand = new LambdaCommand(OnSaveFileCommandExecuted, CanSaveFileCommandExecute);
             SaveAsFileCommand = new LambdaCommand(OnSaveAsFileCommandExecuted, CanSaveAsFileCommandExecute);
             SaveAllFileCommand = new LambdaCommand(OnSaveAllFileCommandExecuted, CanSaveAllFileCommandExecute);
-            FilesStyleCorrectionCommand = new LambdaCommand(OnFilesStyleCorrectionExecuted, CanFilesStyleCorrectionExecute);
+            FilesStyleCorrectionCommand = new LambdaCommand(OnFilesStyleCorrectionCommandExecuted, CanFilesStyleCorrectionCommandExecute);
+            MergingFilesCommand = new LambdaCommand(OnMergingFilesCommandExecuted, CanMergingFilesCommandExecute);
 
             _fileRepository = fileRepository;
             _repositoryProcedureDialog = repositoryProcedureDialog;

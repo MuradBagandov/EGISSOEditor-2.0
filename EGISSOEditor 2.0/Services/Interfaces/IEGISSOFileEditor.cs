@@ -24,8 +24,8 @@ namespace EGISSOEditor_2._0.Services.Interfaces
 
         Task ValidateFilesAsync(IEnumerable<T> file, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel);
 
-        T MergingFiles(IEnumerable<T> file);
+        void MergingFiles(IEnumerable<T> file, string mergingFilePath);
 
-        Task<T> MergingFilesAsync(IEnumerable<T> file, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel);
+        Task MergingFilesAsync(IEnumerable<T> file, string mergingFilePath, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel);
     }
 }

@@ -72,7 +72,10 @@ namespace EGISSOEditor_2._0.Views.Windows
             ProcessedFiles = $"{v.ProcessedElements} из {v.TotalElements}";
 
             if (v.IsEndOfProcessed)
+            {
+                IsCancel = true;
                 this.Close();
+            }
         });
 
         private CancellationTokenSource _cancellationSource;

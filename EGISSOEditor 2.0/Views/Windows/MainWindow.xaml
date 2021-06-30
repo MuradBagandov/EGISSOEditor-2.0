@@ -60,8 +60,12 @@
             <Button Command="{Binding RemoveFilesCommand}" ToolTip="Удалить все">
                 <Image Source="../../Resources/Icons/File_remove_all_1.png"/>
             </Button>
+            <Rectangle Width="10"/>
             <Button Command="{Binding FilesStyleCorrectionCommand}" ToolTip="Корректировать шаблон">
                 <Image Source="../../Resources/Icons/File_edit_1.png"/>
+            </Button>
+            <Button Command="{Binding MergingFilesCommand}" ToolTip="Объединить файлы">
+                <Image Source="../../Resources/Icons/Combine_Files_2.png"/>
             </Button>
         </StackPanel>
 
@@ -92,13 +96,11 @@
             <Grid.Resources>
                 <conv:Linear B="-20" x:Key="LinearB-20"/>
                 <DataTemplate DataType="{x:Type model:EGISSOFile}">
-                    <Grid>
-                        <StackPanel Width="{Binding Value, ElementName=slSize, UpdateSourceTrigger=PropertyChanged}"
-                                ToolTip="{Binding Directory}">
+                    <Grid ToolTip="{Binding Directory}">
+                        <StackPanel Width="80">
                             <TextBlock Text="{Binding IsFileChanged}" x:Name="IsFileChanged" Visibility="Collapsed"/>
                             <Image x:Name="IconListBoxItem"
-                            Width="{Binding Value, ElementName=slSize, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource LinearB-20}}" 
-                               DataContext="{Binding RelativeSource={RelativeSource AncestorType=Grid}}">
+                            Width="60">
                                 <Image.Style>
                                     <Style TargetType="{x:Type Image}">
                                         <Style.Triggers>
