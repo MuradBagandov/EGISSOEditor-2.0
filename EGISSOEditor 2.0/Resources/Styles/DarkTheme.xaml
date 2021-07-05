@@ -3441,6 +3441,75 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Gives the button red colour properties when mouseover/clicked -->
+    <ControlTemplate x:Key="CloseWindowButton" TargetType="{x:Type Button}">
+        <Border x:Name="border" 
+                BorderBrush="{TemplateBinding BorderBrush}" 
+                BorderThickness="{TemplateBinding BorderThickness}" 
+                Background="{TemplateBinding Background}" 
+                SnapsToDevicePixels="true"
+                HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch">
+            <ContentPresenter x:Name="contentPresenter" 
+                              Focusable="False" 
+                              Margin="{TemplateBinding Padding}" 
+                              RecognizesAccessKey="True" 
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Center"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsDefaulted" Value="true">
+                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource ControlMouseOverBorderBrush}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" TargetName="border" Value="#FFF01428"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="#FFF01428"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" TargetName="border" Value="#FF940A14"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="#FF940A14"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource ControlDisabledGlythColour}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="WindowButton" TargetType="{x:Type Button}">
+        <Border x:Name="border" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Background="{TemplateBinding Background}" 
+                            SnapsToDevicePixels="true"
+                            HorizontalAlignment="Stretch" 
+                            VerticalAlignment="Stretch">
+            <ContentPresenter x:Name="contentPresenter" 
+                                          Focusable="False" 
+                                          Margin="{TemplateBinding Padding}" 
+                                          RecognizesAccessKey="True" 
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsDefaulted" Value="true">
+                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource ControlMouseOverBorderBrush}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" TargetName="border" Value="{StaticResource ControlPrimaryMouseOverBackground}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource ControlPrimaryMouseOverBorderBrush}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" TargetName="border" Value="{StaticResource ControlPrimarySelectedBackground}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource ControlPrimarySelectedBorderBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource ControlDisabledGlythColour}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
     <!-- Custom Window style (unaffected by win32 style stuff) -->
 
     <Style x:Key="CustomWindowStyle" TargetType="{x:Type Window}">
@@ -3490,6 +3559,7 @@
                                         <Button x:Name="btnMinimize"
                                                 Background="Transparent"
                                                 BorderBrush="Transparent"
+                                                Template="{StaticResource WindowButton}"
                                                 Width="40"
                                                 VerticalContentAlignment="Bottom"
                                                 WindowChrome.IsHitTestVisibleInChrome="True" 
@@ -3504,6 +3574,7 @@
                                         <Button x:Name="btnRestore"
                                                 Background="Transparent"
                                                 BorderBrush="Transparent"
+                                                Template="{StaticResource WindowButton}"
                                                 Width="40"
                                                 WindowChrome.IsHitTestVisibleInChrome="True" 
                                                 Click="AutoMinimize_Event">
@@ -3549,6 +3620,8 @@
 
     <!-- Same window but auto maximize/minimize button removed. Tool window -->
 
+
+
     <Style x:Key="CustomToolWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="BorderBrush" Value="{StaticResource WindowBorderColour}" />
         <Setter Property="Background" Value="{StaticResource BackgroundColour}" />
@@ -3581,7 +3654,6 @@
                                       Background="{TemplateBinding BorderBrush}"
                                       VerticalAlignment="Top" Margin="0">
                                     <DockPanel Margin="0,0,130,0">
-                                        <Image HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,4,0,0" Source="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}" Height="24"  />
                                         <TextBlock Margin="5,3"
                                                    VerticalAlignment="Center"
                                                    HorizontalAlignment="Stretch"
@@ -3596,6 +3668,7 @@
                                         <Button x:Name="btnMinimize"
                                                 Background="Transparent"
                                                 BorderBrush="Transparent"
+                                                Template="{StaticResource WindowButton}"
                                                 Width="40"
                                                 VerticalContentAlignment="Bottom"
                                                 WindowChrome.IsHitTestVisibleInChrome="True" 
@@ -3606,7 +3679,7 @@
                                                        Stroke="{StaticResource ControlGlythColour}"
                                                        StrokeThickness="2"/>
                                         </Button>
-                                        <Button x:Name="btnClose"
+                                        <Button x:Name="btnClose" 
                                                 Background="Transparent"
                                                 BorderBrush="Transparent"
                                                 Template="{DynamicResource CloseWindowButton}"
@@ -3636,42 +3709,7 @@
         </Style.Triggers>
     </Style>
 
-    <!-- Gives the button red colour properties when mouseover/clicked -->
-    <ControlTemplate x:Key="CloseWindowButton" TargetType="{x:Type Button}">
-        <Border x:Name="border" 
-                BorderBrush="{TemplateBinding BorderBrush}" 
-                BorderThickness="{TemplateBinding BorderThickness}" 
-                Background="{TemplateBinding Background}" 
-                SnapsToDevicePixels="true"
-                HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch">
-            <ContentPresenter x:Name="contentPresenter" 
-                              Focusable="False" 
-                              Margin="{TemplateBinding Padding}" 
-                              RecognizesAccessKey="True" 
-                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
-                              VerticalAlignment="Center"
-                              HorizontalAlignment="Center"/>
-        </Border>
-        <ControlTemplate.Triggers>
-            <Trigger Property="IsDefaulted" Value="true">
-                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource ControlMouseOverBorderBrush}"/>
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="true">
-                <Setter Property="Background" TargetName="border" Value="#FFF01428"/>
-                <Setter Property="BorderBrush" TargetName="border" Value="#FFF01428"/>
-            </Trigger>
-            <Trigger Property="IsPressed" Value="true">
-                <Setter Property="Background" TargetName="border" Value="#FF940A14"/>
-                <Setter Property="BorderBrush" TargetName="border" Value="#FF940A14"/>
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Background" TargetName="border" Value="{StaticResource ControlBrightDefaultBackground}"/>
-                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource ControlBrightDefaultBorderBrush}"/>
-                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource ControlDisabledGlythColour}"/>
-            </Trigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
+
 
     <SolidColorBrush x:Key="ListBorder" Color="#828790"/>
     <Style TargetType="{x:Type TreeView}">

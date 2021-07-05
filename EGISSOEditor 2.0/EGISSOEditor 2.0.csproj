@@ -227,6 +227,7 @@
     </ApplicationDefinition>
     <Compile Include="Controls\ListBoxCustom.cs" />
     <Compile Include="Infrastuctures\Commands\Base\Command.cs" />
+    <Compile Include="Infrastuctures\Commands\ChangeThemeCommand.cs" />
     <Compile Include="Infrastuctures\Commands\LambdaCommand.cs" />
     <Compile Include="Infrastuctures\Commands\OpenFileCommand.cs" />
     <Compile Include="Infrastuctures\Commands\SelectAllCommand.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="Resources\Styles\LightTheme.xaml.cs">
       <DependentUpon>LightTheme.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Resources\ThemeContoller.cs" />
     <Compile Include="Services\EGISSOFileEditor.cs" />
     <Compile Include="Services\EGISSOFileRepository.cs" />
     <Compile Include="Services\EGISSORepositoryProcedureDialog.cs" />

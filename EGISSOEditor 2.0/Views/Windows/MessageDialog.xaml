@@ -10,7 +10,7 @@
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="{Binding Title}" FontSize="14"
         SizeToContent="WidthAndHeight" MinHeight="100" MinWidth="100" MaxWidth="600" Icon="/EGISSOEditor 2.0;component/Resources/Icons/ProgrammICO_1.ico"
-        Style="{StaticResource CustomToolWindowStyle}" WindowStyle="None">
+        Style="{DynamicResource CustomToolWindowStyle}" WindowStyle="None">
     <Grid>
         <Grid Margin="10,5">
             <Grid.RowDefinitions>

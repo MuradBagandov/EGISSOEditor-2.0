@@ -29,6 +29,7 @@ namespace EGISSOEditor_2._0
         private IUserDialog UserDialog => App.Host.Services.GetRequiredService<IUserDialog>();
         private IRepositoryProcedureDialog<EGISSOFile> RepositoryDialog => App.Host.Services.GetRequiredService<IRepositoryProcedureDialog<EGISSOFile>>();
 
+
         public MainWindow()
         {
             InitializeComponent();

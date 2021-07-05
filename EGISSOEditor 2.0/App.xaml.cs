@@ -36,6 +36,8 @@ namespace EGISSOEditor_2._0
         protected override async void OnStartup(StartupEventArgs e)
         {
 
+            ThemeContoller.CurrentTheme = (ThemeTypes)EGISSOEditor_2._0.Properties.Settings.Default.Theme;
+
             base.OnStartup(e);
             IsDesignMode = false;
             var host = Host;
@@ -46,7 +48,6 @@ namespace EGISSOEditor_2._0
 
         protected override void OnExit(ExitEventArgs e)
         {
-
             base.OnExit(e);
             using (var host = Host)
                 host.StopAsync().ConfigureAwait(false);
