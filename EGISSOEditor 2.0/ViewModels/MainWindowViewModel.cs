@@ -140,7 +140,6 @@ namespace EGISSOEditor_2._0.ViewModels
 
         #endregion
 
-
         #region FilesStyleCorrectionCommand
 
         public ICommand FilesStyleCorrectionCommand { get; set; }
@@ -207,6 +206,19 @@ namespace EGISSOEditor_2._0.ViewModels
         }
         #endregion
 
+        #region ValidateFilesCommand
+        public ICommand ValidateFilesCommand { get; set; }
+
+        private bool CanValidateFilesCommandExecute(object p) => SelectedFiles.Count > 0;
+
+        private void OnValidateFilesCommandExecuted(object p)
+        {
+             _EGISSOEditor.ValidateFiles(SelectedFiles.Select(i => (EGISSOFile)i));
+            _userDialog.ShowMessage("Executed");
+        }
+
+        #endregion
+
         #endregion
 
         public MainWindowViewModel(IFileRepository<EGISSOFile> fileRepository, IRepositoryProcedureDialog<EGISSOFile> repositoryProcedureDialog, IEGISSOFileEditor<EGISSOFile> EGISSOEditor, IUserDialog userDialog)
@@ -219,6 +231,7 @@ namespace EGISSOEditor_2._0.ViewModels
             SaveAllFileCommand = new LambdaCommand(OnSaveAllFileCommandExecuted, CanSaveAllFileCommandExecute);
             FilesStyleCorrectionCommand = new LambdaCommand(OnFilesStyleCorrectionCommandExecuted, CanFilesStyleCorrectionCommandExecute);
             MergingFilesCommand = new LambdaCommand(OnMergingFilesCommandExecuted, CanMergingFilesCommandExecute);
+            ValidateFilesCommand = new LambdaCommand(OnValidateFilesCommandExecuted, CanValidateFilesCommandExecute);
 
             _fileRepository = fileRepository;
             _repositoryProcedureDialog = repositoryProcedureDialog;

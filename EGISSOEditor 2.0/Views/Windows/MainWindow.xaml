@@ -100,10 +100,10 @@
                 <conv:Linear B="-20" x:Key="LinearB-20"/>
                 <DataTemplate DataType="{x:Type model:EGISSOFile}">
                     <Grid ToolTip="{Binding Directory}">
-                        <StackPanel Width="80">
+                        <StackPanel Width="90">
                             <TextBlock Text="{Binding IsFileChanged}" x:Name="IsFileChanged" Visibility="Collapsed"/>
                             <Image x:Name="IconListBoxItem"
-                            Width="60">
+                            Width="70">
                                 <Image.Style>
                                     <Style TargetType="{x:Type Image}">
                                         <Style.Triggers>
@@ -117,7 +117,7 @@
                                     </Style>
                                 </Image.Style>
                             </Image>
-                            <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center" MaxHeight="150"/>
+                            <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center" MaxHeight="150" Padding="5,0"/>
                         </StackPanel>
                         <Grid  Background="{StaticResource SolidBrush_White}" Opacity="0.01">
                             <Grid.InputBindings>

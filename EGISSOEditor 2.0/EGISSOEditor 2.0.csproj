@@ -42,6 +42,9 @@
   <PropertyGroup>
     <StartupObject>EGISSOEditor_2._0.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Icons\ProgrammICO_1.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EPPlus, Version=5.6.4.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.5.6.4\lib\net45\EPPlus.dll</HintPath>
