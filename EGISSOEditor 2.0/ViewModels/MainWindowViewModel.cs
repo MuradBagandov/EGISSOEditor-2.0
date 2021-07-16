@@ -54,7 +54,7 @@ namespace EGISSOEditor_2._0.ViewModels
             OpenFileDialog openDialog = new OpenFileDialog()
             {
                 Multiselect = true,
-                Filter = "Excel xlsx;|*.xlsx;"
+                Filter = "Excel xlsx;|*.xlsx; *.xls; *.xlsm; *.xlsb;"
             };
 
             if (openDialog.ShowDialog() == true)
