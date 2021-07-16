@@ -153,12 +153,14 @@ namespace EGISSOEditor_2._0.ViewModels
             {
                 await _EGISSOEditor.FilesStyleCorrectionAsync(SelectedFiles.Select(i => (EGISSOFile)i), progress, cancel);
             }
+            #pragma warning disable CS0168
             catch (OperationCanceledException e)
+            #pragma warning restore CS0168
             {
             }
             catch (Exception e)
             {
-                _userDialog.ShowMessage("Executed", "1", Services.Enums.ShowMessageIcon.Infomation, Services.Enums.ShowMessageButtons.Ok);
+                _userDialog.ShowMessage(e.Message, "EGISSOEditor", Services.Enums.ShowMessageIcon.Error);
             }
             finally
             {
@@ -211,10 +213,26 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private bool CanValidateFilesCommandExecute(object p) => SelectedFiles.Count > 0;
 
-        private void OnValidateFilesCommandExecuted(object p)
+        private async void OnValidateFilesCommandExecuted(object p)
         {
-             _EGISSOEditor.ValidateFiles(SelectedFiles.Select(i => (EGISSOFile)i));
-            _userDialog.ShowMessage("Executed");
+            var (progress, cancel, close) = _userDialog.ShowProgress();
+            try
+            {
+                await _EGISSOEditor.ValidateFilesAsync(SelectedFiles.Select(i => (EGISSOFile)i), progress, cancel);
+            }
+            #pragma warning disable CS0168 
+            catch (OperationCanceledException e)
+            #pragma warning restore CS0168
+            {
+            }
+            catch (Exception e)
+            {
+                _userDialog.ShowMessage(e.Message, "EGISSOEditor", Services.Enums.ShowMessageIcon.Error);
+            }
+            finally
+            {
+                close?.Invoke();
+            }
         }
 
         #endregion

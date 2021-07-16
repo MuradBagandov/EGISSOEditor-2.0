@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ using OfficeOpenXml.Style;
 
 namespace EGISSOEditor_2._0.Services
 {
+    
     internal class EGISSOFileEditor : Interfaces.IEGISSOFileEditor<EGISSOFile>, IDisposable
     {
         private ExcelPackage _patternPackage;
@@ -45,95 +47,12 @@ namespace EGISSOEditor_2._0.Services
             await Task.Run(() => ValidateFile(path.Directory, progress, cancel));
 
 
-        public void ValidateFiles(IEnumerable<EGISSOFile> files)
-        {
-            int CountMainSheetRows = 0;
-
-            var validationParametrs =
-                new List<(int[] columns, Action<ExcelRange> beforeValidationAction, Predicate<object> isValidate, Predicate<ExcelRange> invalidValueEvent)>()
-                {
-                    (new int[]{2}, null, (v) => v is string str && Regex.IsMatch(str, "9796.00001"), (v) => { v.Value = "9796.00001"; return true; }),
-                    (new int[]{3,17}, SNILSCorrection, (v) => v is string str && CheckSNILS(str), null),
-                    (new int[]{4,5,18,19}, null,(v) => v is string str && Regex.IsMatch(str, "^[А-яЁё\\s\\-]{1,100}$"), null),
-                    (new int[]{6,20}, null,(v) => v is string str && Regex.IsMatch(str, "(^[А-яЁё\\s\\-]{1,100}$)|^$"), null),
-                    (new int[]{7,21}, null,(v) => v is string str && Regex.IsMatch(str, "(^Female$|^Male$)"), null),
-                    (new int[]{8, 22, 33, 34, 35}, null, (v) => v is DateTime, null),
-                    (new int[]{9, 23}, null, (v) => v is string str && Regex.IsMatch(str, "([а-яА-ЯёЁ\\-0-9№(][а-яА-ЯёЁ\\-\\s',.0-9()№\"\\\\/]{1,499})|^$"), null),
-                    (new int[]{10, 24}, null, (v) => Regex.IsMatch(ConvertObjectDoubleToString(v), "(^\\d{8,11}$)|^$"), null),
-                    (new int[]{11, 25},null, (v) => Regex.IsMatch(ConvertObjectDoubleToString(v), "(^\\d{1,3}$)|^$"), null),
-                    (new int[]{31, 32}, null,(v) => v is string str && Regex.IsMatch(str, "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"), null),
-                    (new int[]{36}, null, (v) => Regex.IsMatch(ConvertObjectDoubleToString(v), "0|1"), (v)=> {v.Value = "0"; return true; })
-
-                };
-
-            foreach (EGISSOFile item in files)
-            {
-                using (ExcelPackage fileExcel = new ExcelPackage(new FileInfo(item.TemplateDirectory)))
-                {
-                    ExcelWorksheet mainSheet = fileExcel.Workbook.Worksheets.FirstOrDefault();
-                    CountMainSheetRows = RecountRow(mainSheet);
-                    var range = mainSheet.Cells[7, 1, CountMainSheetRows + 6, 56];
-                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    range.Style.Fill.BackgroundColor.SetColor(255, 255, 255, 255);
+        public void ValidateFiles(IEnumerable<EGISSOFile> files) => ValidateFiles(files, default, default);
 
 
-                    foreach(var validateItem in validationParametrs)
-                        ColumnsValidate(mainSheet, validateItem.columns, 
-                            validateItem.isValidate, validateItem.invalidValueEvent, validateItem.beforeValidationAction);
-                    
-
-                    fileExcel.Save();
-                }
-            }
-
-            void ColumnsValidate(ExcelWorksheet sheet, int[] columns, Predicate<object> isValidate, Predicate<ExcelRange> invalidValueEvent = null, Action<ExcelRange> beforeValidationAction = null)
-            {
-                for (int row = 7; row <= CountMainSheetRows + 6; row++)
-                {
-                    for(int i = 0; i< columns.Length; i++)
-                    {
-                        var currentCell = sheet.Cells[row, columns[i]];
-                        beforeValidationAction?.Invoke(currentCell);
-
-                        object value = currentCell.Value;
-                        if (value == null)
-                        {
-                            currentCell.Value = string.Empty;
-                            value = currentCell.Value;
-                        }
-
-                        if (!(isValidate?.Invoke(value) ?? true))
-                        {
-                            if (!(invalidValueEvent?.Invoke(currentCell) ?? false))
-                            {
-                                currentCell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                currentCell.Style.Fill.BackgroundColor.SetColor(255, 255, 83, 83);
-                            }
-                        }
-                    }
-                }
-            }
-
-            void SNILSCorrection(ExcelRange v)
-            {
-                if (v is ExcelRange cell && cell.Value is string str)
-                    cell.Value = Regex.Replace(str, @"\D", "");
-            }
-
-            string ConvertObjectDoubleToString(object v)
-            {
-                if (v is double dValue)
-                    return dValue.ToString();
-                else if (v is string strValue)
-                    return strValue;
-                return string.Empty;
-            }
-        }
-
-        public Task ValidateFilesAsync(IEnumerable<EGISSOFile> files, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task ValidateFilesAsync(IEnumerable<EGISSOFile> files, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel) =>
+            await Task.Run(() => ValidateFiles(files, progress, cancel));
+            
 
         public void FilesStyleCorrection(IEnumerable<EGISSOFile> files) => FilesStyleCorrection(files, null, default);
 
@@ -209,7 +128,6 @@ namespace EGISSOEditor_2._0.Services
             return differentes < 40;
         }
 
-
         private void MergingFiles(IEnumerable<EGISSOFile> files, string mergingFilePath, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
         {
             ProcedureElementsProgessReporter reporter = new ProcedureElementsProgessReporter(progress, "Объединение файлов", files.Count());
@@ -236,6 +154,8 @@ namespace EGISSOEditor_2._0.Services
                     {
                         mainMergedFileSheet = mergedFile.Workbook.Worksheets.FirstOrDefault();
                         int CountMergedFileRows = RecountRow(mainMergedFileSheet);
+                        if (CountMergedFileRows == 0)
+                            continue;
                         mainMergedFileSheet.Cells[7, 1, CountMergedFileRows + 6, 56].Copy(mainMergingFileSheet.Cells[offsetsRow, 1]);
                         offsetsRow += CountMergedFileRows;
                     }
@@ -277,7 +197,7 @@ namespace EGISSOEditor_2._0.Services
                     range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                     range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    range.Style.Fill.BackgroundColor.SetColor(255, 240, 240, 240);
+                    range.Style.Fill.BackgroundColor.SetColor(255, 255, 255, 255);
 
                     reporter.CurrentElementProgress = 0.4f;
                     cancel.ThrowIfCancellationRequested();
@@ -331,6 +251,68 @@ namespace EGISSOEditor_2._0.Services
             }
         }
 
+        private void ValidateFiles(IEnumerable<EGISSOFile> files, IProgress<ProcedureElementsProgessReporter> progress, CancellationToken cancel)
+        {
+            ProcedureElementsProgessReporter reporter = new ProcedureElementsProgessReporter(progress, "Проверка файла на ошибки", files.Count());
+            int countMainSheetRows = 0;
+
+            foreach (EGISSOFile item in files)
+            {
+                reporter.CurrentElementName = item.Name;
+                using (ExcelPackage fileExcel = new ExcelPackage(new FileInfo(item.TemplateDirectory)))
+                {
+                    cancel.ThrowIfCancellationRequested();
+                    ExcelWorksheet mainSheet = fileExcel.Workbook.Worksheets.FirstOrDefault();
+                    countMainSheetRows = RecountRow(mainSheet);
+                    var range = mainSheet.Cells[7, 1, countMainSheetRows + 6, 56];
+                    range.Style.Fill.SetBackground(ExcelIndexedColor.Indexed1);
+
+                    float procesedvalidateItems = 0;
+                    foreach (var validateItem in EGISSOValidationRules.ValidationParametrs)
+                    {
+                        procesedvalidateItems++;
+                        cancel.ThrowIfCancellationRequested();
+                        reporter.CurrentElementProgress = procesedvalidateItems / EGISSOValidationRules.ValidationParametrs.Count();
+                        ColumnsValidate(mainSheet, validateItem.columns,
+                            validateItem.isValidate, validateItem.invalidValueEvent, validateItem.beforeValidationAction);
+                    }
+                    
+                    fileExcel.Save();
+                }
+                item.IsFileChanged = true;
+                reporter.ProcessedElements++;
+            }
+
+            void ColumnsValidate(ExcelWorksheet sheet, int[] columns, Predicate<ValidateArgs> isValidate, Predicate<ValidateArgs> invalidValueEvent = null, Action<ExcelRange> beforeValidationAction = null)
+            {
+                for (int row = 7; row <= countMainSheetRows + 6; row++)
+                {
+                    for (int i = 0; i < columns.Length; i++)
+                    {
+                        var currentCell = sheet.Cells[row, columns[i]];
+                        beforeValidationAction?.Invoke(currentCell);
+
+                        object value = currentCell.Value;
+                        if (value == null)
+                        {
+                            currentCell.Value = string.Empty;
+                            value = currentCell.Value;
+                        }
+
+                        ValidateArgs validateArgs = new ValidateArgs(value, currentCell, sheet, row, columns[i]);
+
+                        if (!(isValidate?.Invoke(validateArgs) ?? true))
+                        {
+                            if (!(invalidValueEvent?.Invoke(validateArgs) ?? false))
+                            {
+                                currentCell.Style.Fill.SetBackground(ExcelIndexedColor.Indexed29);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         /// Вычисляет количество строк в файле, без строк заголовков
@@ -366,28 +348,5 @@ namespace EGISSOEditor_2._0.Services
                 return true;
             }
         }
-
-        private bool CheckSNILS(string value)
-        {
-            value = value.Replace("-", "");
-
-            if (Regex.IsMatch(value, @"^\d{9,11}$"))
-                value = value.PadLeft(11, '0');
-            else
-                return false;
-
-            if (int.Parse(value.Substring(0, 9)) < 1001998)
-                return false;
-
-            int controlNumber = 0;
-
-            for (int i = 0; i < 9; i++)
-                controlNumber += (9 - i) * int.Parse(value[i] + "");
-
-            if (controlNumber > 100) controlNumber %= 101;
-            if (controlNumber == 100) controlNumber = 0;
-            return controlNumber == int.Parse(value.Substring(9, 2));
-        }
-
     }
 }
