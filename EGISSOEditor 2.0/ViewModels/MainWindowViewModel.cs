@@ -239,7 +239,9 @@ namespace EGISSOEditor_2._0.ViewModels
 
         #endregion
 
-        public MainWindowViewModel(IFileRepository<EGISSOFile> fileRepository, IRepositoryProcedureDialog<EGISSOFile> repositoryProcedureDialog, IEGISSOFileEditor<EGISSOFile> EGISSOEditor, IUserDialog userDialog)
+        public MainWindowViewModel(IFileRepository<EGISSOFile> fileRepository, 
+            IRepositoryProcedureDialog<EGISSOFile> repositoryProcedureDialog, 
+            IEGISSOFileEditor<EGISSOFile> EGISSOEditor, IUserDialog userDialog)
         {
             AddFileCommand = new LambdaCommand(OnAddFileCommandExecuted);
             RemoveFileCommand = new LambdaCommand(OnRemoveFileCommandExecuted, CanRemoveFileCommandExecute);

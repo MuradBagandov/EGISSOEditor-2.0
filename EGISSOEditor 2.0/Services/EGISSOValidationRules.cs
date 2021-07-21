@@ -8,6 +8,22 @@ using System.Threading.Tasks;
 
 namespace EGISSOEditor_2._0.Services
 {
+    internal struct ValidateRule
+    {
+        public ValidateRule(Predicate<ValidateArgs> isValidate, params int[] columns)
+        {
+            IsValidate = isValidate;
+            Columns = columns;
+            BeforeValidationAction = null;
+            CorrectIfValidateIsInvalid = null;
+        }
+
+        public int[] Columns { get; private set; }
+        public Action<ValidateArgs> BeforeValidationAction { get; set; }
+        public Predicate<ValidateArgs> IsValidate{ get; set; }
+        public Predicate<ValidateArgs> CorrectIfValidateIsInvalid { get; set; }
+    }
+
     internal struct ValidateArgs
     {
         public ValidateArgs(object value, ExcelRange cell, ExcelWorksheet sheet, int indexRow, int indexColumn)
@@ -28,31 +44,64 @@ namespace EGISSOEditor_2._0.Services
 
     internal static class EGISSOValidationRules
     {
-        public static List<(int[] columns, Action<ExcelRange> beforeValidationAction, Predicate<ValidateArgs> isValidate, Predicate<ValidateArgs> invalidValueEvent)> ValidationParametrs =>
-                new List<(int[] columns, Action<ExcelRange> beforeValidationAction, Predicate<ValidateArgs> isValidate, Predicate<ValidateArgs> invalidValueEvent)>()
-                {
-                    (new int[]{1}, null, (v) => false, (v) => { v.Cell.Value = (v.IndexRow-6).ToString(); return true; }),
-                    (new int[]{2}, null, (v) => v.Value is string str && Regex.IsMatch(str, "9796.00001"), (v) => { v.Cell.Value = "9796.00001"; return true; }),
-                    (new int[]{3,17}, SNILSCorrection, (v) => v.Value is string str && CheckSNILS(str), null),
-                    (new int[]{4,5,18,19}, null,(v) => v.Value is string str && Regex.IsMatch(str, "^[А-яЁё\\s\\-]{1,100}$"), null),
-                    (new int[]{6,20}, null,(v) => v.Value is string str && Regex.IsMatch(str, "(^[А-яЁё\\s\\-]{1,100}$)|^$"), null),
-                    (new int[]{7,21}, ReplaceSpaceCorrection,(v) => v.Value is string str && Regex.IsMatch(str, "(^Female$|^Male$)"), null),
-                    (new int[]{8, 22, 33, 34, 35}, null, DateValidate, null),
-                    (new int[]{9, 23}, null, (v) => v.Value is string str && Regex.IsMatch(str, "([а-яА-ЯёЁ\\-0-9№(][а-яА-ЯёЁ\\-\\s',.0-9()№\"\\\\/]{1,499})|^$"), null),
-                    (new int[]{10, 24}, null, (v) => Regex.IsMatch(ConvertObjectDoubleToString(v.Value), "(^\\d{8,11}$)|^$"), null),
-                    (new int[]{11, 25},ReplaceSpaceCorrection, (v) => Regex.IsMatch(ConvertObjectDoubleToString(v.Value), "(^\\d{1,3}$)|^$"), null),
-                    (new int[]{31, 32}, ReplaceSpaceCorrection, (v) => v.Value is string str && Regex.IsMatch(str, "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"), null),
-                    (new int[]{36}, ReplaceSpaceCorrection, (v) => Regex.IsMatch(ConvertObjectDoubleToString(v.Value), "^0$|^1$"), (v)=> {v.Cell.Value = "0"; return true; }),
-                    (new int[]{12,26}, ReplaceSpaceCorrection, (v)=>Regex.IsMatch(ConvertObjectDoubleToString(v.Value), "^[1-8]{1}$"), null),
-                    (new int[]{13,27}, ReplaceSpaceCorrection, IdentityDocSeriesValidate, null),
-                    (new int[]{14,28}, ReplaceSpaceCorrection, IdentityDocNumberValidate, null),
-                    (new int[]{15,29}, ReplaceSpaceCorrection, IdentityDocIssuerDateValidate, null),
-                    (new int[]{16,30}, null, IdentityDocIssuerValidate, null),
-                };
-
-        private static void SNILSCorrection(ExcelRange v)
+        public static List<ValidateRule> ValidationRules = new List<ValidateRule>()
         {
-            if (v is ExcelRange cell)
+            new ValidateRule((a) => true, 1)
+            {
+                BeforeValidationAction = (a)=>a.Cell.Value = (a.IndexRow-6).ToString()
+            },
+            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "9796.00001"), 2)
+            {
+                CorrectIfValidateIsInvalid = (a) => { a.Cell.Value = "9796.00001"; return true; }
+            },
+            new ValidateRule((a) => a.Value is string str && CheckSNILS(str), 3,17)
+            {
+                BeforeValidationAction = SNILSCorrection
+            },
+            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "^[А-яЁё\\s\\-]{1,100}$"), 4,5,18,19),
+            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "(^[А-яЁё\\s\\-]{1,100}$)|^$"), 6,20),
+            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "(^Female$|^Male$)"), 7,21)
+            {
+                BeforeValidationAction = ReplaceSpaceCorrection
+            },
+            new ValidateRule(DateValidate, 8, 22, 33, 34, 35),
+            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "([а-яА-ЯёЁ\\-0-9№(][а-яА-ЯёЁ\\-\\s',.0-9()№\"\\\\/]{1,499})|^$"), 9,23),
+            new ValidateRule((a) => Regex.IsMatch(ConvertObjectDoubleToString(a.Value), "(^\\d{8,11}$)|^$"), 10,24),
+            new ValidateRule((a) => Regex.IsMatch(ConvertObjectDoubleToString(a.Value), "(^\\d{1,3}$)|^$"), 11,25)
+            {
+                BeforeValidationAction = ReplaceSpaceCorrection
+            },
+            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"), 31,32)
+            {
+                BeforeValidationAction = ReplaceSpaceCorrection
+            },
+            new ValidateRule((a) => Regex.IsMatch(ConvertObjectDoubleToString(a.Value), "^0$|^1$"), 36)
+            {
+                BeforeValidationAction = ReplaceSpaceCorrection,
+                CorrectIfValidateIsInvalid = (a)=> {a.Cell.Value = "0"; return true; }
+            },
+            new ValidateRule((a)=>Regex.IsMatch(ConvertObjectDoubleToString(a.Value), "^[1-8]{1}$"), 12,26)
+            {
+                BeforeValidationAction = ReplaceSpaceCorrection
+            },
+            new ValidateRule(IdentityDocSeriesValidate, 13,27)
+            {
+                BeforeValidationAction = ReplaceSpaceCorrection
+            },
+            new ValidateRule(IdentityDocNumberValidate, 14,28)
+            {
+                BeforeValidationAction = ReplaceSpaceCorrection
+            },
+            new ValidateRule(IdentityDocIssuerDateValidate, 15,29)
+            {
+                BeforeValidationAction = ReplaceSpaceCorrection
+            },
+            new ValidateRule(IdentityDocIssuerValidate, 16,30)
+        };
+
+        private static void SNILSCorrection(ValidateArgs v)
+        {
+            if (v.Cell is ExcelRange cell)
             {
                 string str = ConvertObjectDoubleToString(cell.Value);
                 if (!string.IsNullOrEmpty(str))
@@ -60,9 +109,10 @@ namespace EGISSOEditor_2._0.Services
             }
         }
 
-        private static void ReplaceSpaceCorrection(ExcelRange v)
+        private static void ReplaceSpaceCorrection(ValidateArgs v)
         {
-            if (v is ExcelRange cell && cell.Value is string str)
+            
+            if (v.Cell is ExcelRange cell && cell.Value is string str)
                 cell.Value = str.Replace(" ", "");
         }
 
@@ -118,10 +168,9 @@ namespace EGISSOEditor_2._0.Services
             if (!(a.Value is string || a.Value is double))
                 return false;
             string strValue = ConvertObjectDoubleToString(a.Value);
-            string patternValidate = default;
             bool rewriteValue = false;
 
-
+            string patternValidate;
             switch (strIdentityDocType)
             {
                 case "1": patternValidate = "^\\d{6}$"; strValue = strValue.PadLeft(6, '0'); rewriteValue = true; break;

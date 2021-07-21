@@ -268,13 +268,13 @@ namespace EGISSOEditor_2._0.Services
                     range.Style.Fill.SetBackground(ExcelIndexedColor.Indexed1);
 
                     float procesedvalidateItems = 0;
-                    foreach (var validateItem in EGISSOValidationRules.ValidationParametrs)
+                    foreach (var validateItem in EGISSOValidationRules.ValidationRules)
                     {
                         procesedvalidateItems++;
                         cancel.ThrowIfCancellationRequested();
-                        reporter.CurrentElementProgress = procesedvalidateItems / EGISSOValidationRules.ValidationParametrs.Count();
-                        ColumnsValidate(mainSheet, validateItem.columns,
-                            validateItem.isValidate, validateItem.invalidValueEvent, validateItem.beforeValidationAction);
+                        reporter.CurrentElementProgress = procesedvalidateItems / EGISSOValidationRules.ValidationRules.Count();
+                        ColumnsValidate(mainSheet, validateItem.Columns,
+                            validateItem.IsValidate, validateItem.CorrectIfValidateIsInvalid, validateItem.BeforeValidationAction);
                     }
                     
                     fileExcel.Save();
@@ -283,15 +283,13 @@ namespace EGISSOEditor_2._0.Services
                 reporter.ProcessedElements++;
             }
 
-            void ColumnsValidate(ExcelWorksheet sheet, int[] columns, Predicate<ValidateArgs> isValidate, Predicate<ValidateArgs> invalidValueEvent = null, Action<ExcelRange> beforeValidationAction = null)
+            void ColumnsValidate(ExcelWorksheet sheet, int[] columns, Predicate<ValidateArgs> isValidate, Predicate<ValidateArgs> invalidValueEvent = null, Action<ValidateArgs> beforeValidationAction = null)
             {
                 for (int row = 7; row <= countMainSheetRows + 6; row++)
                 {
                     for (int i = 0; i < columns.Length; i++)
                     {
                         var currentCell = sheet.Cells[row, columns[i]];
-                        beforeValidationAction?.Invoke(currentCell);
-
                         object value = currentCell.Value;
                         if (value == null)
                         {
@@ -299,8 +297,9 @@ namespace EGISSOEditor_2._0.Services
                             value = currentCell.Value;
                         }
 
+                        beforeValidationAction?.Invoke(new ValidateArgs(value, currentCell, sheet, row, columns[i]));
+                        value = currentCell.Value;
                         ValidateArgs validateArgs = new ValidateArgs(value, currentCell, sheet, row, columns[i]);
-
                         if (!(isValidate?.Invoke(validateArgs) ?? true))
                         {
                             if (!(invalidValueEvent?.Invoke(validateArgs) ?? false))
