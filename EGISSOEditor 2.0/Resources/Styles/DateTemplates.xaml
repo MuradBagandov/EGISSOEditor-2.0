@@ -1,0 +1,70 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:model="clr-namespace:EGISSOEditor_2._0.Models"
+                    xmlns:cmd="clr-namespace:EGISSOEditor_2._0.Infrastuctures.Commands">
+
+    <DataTemplate x:Key="WrapDateTemplate" DataType="{x:Type model:EGISSOFile}" >
+        <Grid ToolTip="{Binding Directory}">
+            <StackPanel Width="80">
+                <TextBlock Text="{Binding IsFileChanged}" x:Name="IsFileChanged" Visibility="Collapsed"/>
+                <Image x:Name="IconListBoxItem" Width="60">
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="True">
+                                    <Setter Property="Source" Value="../../Resources/Icons/File_edit_1.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="False">
+                                    <Setter Property="Source" Value="../../Resources/Icons/File_1.png"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+                <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center" MaxHeight="150" Padding="5,0"/>
+            </StackPanel>
+            <Grid  Background="{StaticResource SolidBrush_White}" Opacity="0.01">
+                <Grid.InputBindings>
+                    <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding TemplateDirectory}">
+                        <MouseBinding.Command>
+                            <cmd:OpenFileCommand/>
+                        </MouseBinding.Command>
+                    </MouseBinding>
+                </Grid.InputBindings>
+            </Grid>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ListDateTemplate" DataType="{x:Type model:EGISSOFile}">
+        <Grid ToolTip="{Binding Directory}">
+            <StackPanel Orientation="Horizontal" Height="30">
+                <TextBlock Text="{Binding IsFileChanged}" x:Name="IsFileChanged" Visibility="Collapsed"/>
+                <Image x:Name="IconListBoxItem" Height="20">
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="True">
+                                    <Setter Property="Source" Value="../../Resources/Icons/File_edit_2.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="False">
+                                    <Setter Property="Source" Value="../../Resources/Icons/File_2.png"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+                <TextBlock Text="{Binding Name}" TextWrapping="Wrap"  MaxHeight="150" Padding="5,0" 
+                                       VerticalAlignment="Center" TextAlignment="Center"/>
+            </StackPanel>
+            <Grid  Background="{StaticResource SolidBrush_White}" Opacity="0.01">
+                <Grid.InputBindings>
+                    <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding TemplateDirectory}">
+                        <MouseBinding.Command>
+                            <cmd:OpenFileCommand/>
+                        </MouseBinding.Command>
+                    </MouseBinding>
+                </Grid.InputBindings>
+            </Grid>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

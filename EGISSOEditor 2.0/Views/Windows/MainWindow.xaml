@@ -24,7 +24,7 @@
     </Window.InputBindings>
     <Grid Margin="5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="35"/>
             <RowDefinition/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
@@ -38,7 +38,7 @@
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
                 <Button Command="{Binding AddFileCommand}" ToolTip="Добавить" Style="{DynamicResource ButtonImageTransparentRoundedCorners}"
                         Padding="2,0" Margin="3,0">
-                    <Image Source="../../Resources/Icons/File_add_1.png"/>
+                    <Image Source="../../Resources/Icons/File_add_3.png"/>
                 </Button>
                 <Button Command="{Binding SaveFileCommand}" ToolTip="Сохранить" Style="{DynamicResource ButtonImageTransparentRoundedCorners}"
                         Padding="2,0" Margin="3,0">
@@ -54,20 +54,20 @@
                 </Button>
                 <Button Command="{Binding RemoveFileCommand}" ToolTip="Удалить" Style="{DynamicResource ButtonImageTransparentRoundedCorners}"
                         Padding="2,0" Margin="3,0">
-                    <Image Source="../../Resources/Icons/File_remove_1.png"/>
+                    <Image Source="../../Resources/Icons/File_remove_3.png"/>
                 </Button>
                 <Button Command="{Binding RemoveFilesCommand}" ToolTip="Удалить все" Style="{DynamicResource ButtonImageTransparentRoundedCorners}"
                         Padding="2,0" Margin="3,0">
-                    <Image Source="../../Resources/Icons/File_remove_all_1.png"/>
+                    <Image Source="../../Resources/Icons/File_remove_all_3.png"/>
                 </Button>
                 <Rectangle Width="10"/>
                 <Button Command="{Binding FilesStyleCorrectionCommand}" ToolTip="Корректировать шаблон" Style="{DynamicResource ButtonImageTransparentRoundedCorners}"
                         Padding="2,0" Margin="3,0">
-                    <Image Source="../../Resources/Icons/File_style_correction.png"/>
+                    <Image Source="../../Resources/Icons/File_style_correction_2.png"/>
                 </Button>
                 <Button Command="{Binding ValidateFilesCommand}" ToolTip="Проверить файлы" Style="{DynamicResource ButtonImageTransparentRoundedCorners}"
                         Padding="2,0" Margin="3,0">
-                    <Image Source="../../Resources/Icons/File_Validate.png"/>
+                    <Image Source="../../Resources/Icons/File_Validate_2.png"/>
                 </Button>
                 <Button Command="{Binding MergingFilesCommand}" ToolTip="Объединить файлы" Style="{DynamicResource ButtonImageTransparentRoundedCorners}"
                         Padding="2,0" Margin="3,0">
@@ -84,82 +84,36 @@
             </StackPanel>
         </DockPanel>
         
-        
-
         <DockPanel Grid.Row="2">
             <Grid DockPanel.Dock="Left">
-                <TextBlock  DockPanel.Dock="Left" Text="{Binding SelectedFiles.Count, StringFormat=Выбранно элементов: {0}}"
-                       Padding="10,0,0,0" FontSize="14" VerticalAlignment="Center">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding SelectedFiles.Count}" Value="0">
-                                    <Setter Property="TextBlock.Visibility" Value="Collapsed"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                <TextBlock x:Name="StatusFilesCount" Text="Всего элементов: 0" Padding="10,0,0,0" VerticalAlignment="Center"/>
             </Grid>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,2">
+                <ToggleButton x:Name="ToggleListStyle" Click="ToggleButton_Click">
+                    <fa:ImageAwesome Icon="ListUl" Margin="4"/>
+                </ToggleButton>
+            </StackPanel>
             <Grid/>
 
         </DockPanel>
         
         <Grid Grid.Row="1" Margin="0,6,0,0">
-            <Grid.Resources>
-                <conv:Linear B="-20" x:Key="LinearB-20"/>
-                <DataTemplate DataType="{x:Type model:EGISSOFile}">
-                    <Grid ToolTip="{Binding Directory}">
-                        <StackPanel Width="90">
-                            <TextBlock Text="{Binding IsFileChanged}" x:Name="IsFileChanged" Visibility="Collapsed"/>
-                            <Image x:Name="IconListBoxItem"
-                            Width="70">
-                                <Image.Style>
-                                    <Style TargetType="{x:Type Image}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="True">
-                                                <Setter Property="Source" Value="../../Resources/Icons/File_edit_1.png"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Text, ElementName=IsFileChanged}" Value="False">
-                                                <Setter Property="Source" Value="../../Resources/Icons/File_1.png"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>
-                            </Image>
-                            <TextBlock Text="{Binding Name}"  TextWrapping="Wrap" TextAlignment="Center" MaxHeight="150" Padding="5,0"/>
-                        </StackPanel>
-                        <Grid  Background="{StaticResource SolidBrush_White}" Opacity="0.01">
-                            <Grid.InputBindings>
-                                <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding TemplateDirectory}">
-                                    <MouseBinding.Command>
-                                        <cmd:OpenFileCommand/>
-                                    </MouseBinding.Command>
-                                </MouseBinding>
-                            </Grid.InputBindings>
-                        </Grid>
-                    </Grid>
-                    
-                </DataTemplate>
-            </Grid.Resources>
 
             <controls:ListBoxCustom Style="{DynamicResource ListBox}" x:Name="lbFiles"
                                     ItemsSource="{Binding Files, UpdateSourceTrigger=PropertyChanged}" 
                                     SelectionMode="Extended" 
                                     BindableSelectedItems="{Binding SelectedFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                    VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                     BorderThickness="1"
-                                    AllowDrop="True" DragDrop.Drop="ListBoxCustom_Drop">
-                <controls:ListBoxCustom.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel VirtualizingPanel.IsVirtualizing="True" 
-                                   VirtualizingPanel.CacheLength="20"
-                                   VirtualizingPanel.VirtualizationMode="Recycling" 
-                                   VirtualizingPanel.IsContainerVirtualizable="True"/>
-                    </ItemsPanelTemplate>
-                </controls:ListBoxCustom.ItemsPanel>
+                                    AllowDrop="True" DragDrop.Drop="ListBoxCustom_Drop"
+                                    SelectionChanged="lbFiles_SelectionChanged" Loaded="lbFiles_Loaded"
+                                    ItemTemplate="{StaticResource WrapDateTemplate}"
+                                    VirtualizingPanel.IsVirtualizing="True" 
+                                    VirtualizingPanel.IsContainerVirtualizable="True" 
+                                    VirtualizingPanel.VirtualizationMode="Recycling">
+                
             </controls:ListBoxCustom>
-            
         </Grid>
     </Grid>
 </Window>

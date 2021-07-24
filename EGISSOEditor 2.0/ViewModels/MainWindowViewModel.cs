@@ -118,13 +118,15 @@ namespace EGISSOEditor_2._0.ViewModels
 
         private void OnSaveAsFileCommandExecuted(object p)
         {
+            var selectFile = (EGISSOFile)SelectedFiles.First();
             SaveFileDialog saveDialog = new SaveFileDialog()
             {
-                Filter = "Excel xlsx; xls|*.xlsx; *.xls"
+                Filter = "Excel xlsx|*.xlsx;",
+                FileName = selectFile.Name
             };
 
             if (saveDialog.ShowDialog() == true)
-                _repositoryProcedureDialog.SaveAs((EGISSOFile)SelectedFiles.First(), saveDialog.FileName);
+                _repositoryProcedureDialog.SaveAs(selectFile, saveDialog.FileName);
         }
 
         #endregion

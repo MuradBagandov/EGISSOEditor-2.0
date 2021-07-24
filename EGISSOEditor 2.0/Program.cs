@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Threading;
 
 namespace EGISSOEditor_2._0
 {
@@ -13,25 +15,22 @@ namespace EGISSOEditor_2._0
         [STAThread]
         public static void Main()
         {
-            var app = new App();
-            app.InitializeComponent();
-            app.Run();
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] Args)
-        {
-            var host_builder = Host.CreateDefaultBuilder(Args);
-
-            host_builder.UseContentRoot(App.CurrentDirectory);
-            host_builder.ConfigureAppConfiguration((host, cfg) =>
+            _ = new Mutex(false, "9ko1cG2CwruC9Ea8", out bool result);
+            if (result)
             {
-                cfg.SetBasePath(App.CurrentDirectory);
-                cfg.AddJsonFile("appSettings.json", true, true);
-            });
-
-            host_builder.ConfigureServices(App.ConfigureServices);
-            return host_builder;
+                var app = new App();
+                app.InitializeComponent();
+                app.Run();
+            }
         }
 
+        public static IHostBuilder CreateHostBuilder(string[] Args) => Host.CreateDefaultBuilder(Args).
+            UseContentRoot(App.CurrentDirectory).
+            ConfigureAppConfiguration((host, cfg) =>
+            {
+                cfg.SetBasePath(App.CurrentDirectory).
+                AddJsonFile("appsettings.json", true, true);
+            }).
+            ConfigureServices(App.ConfigureServices);
     }
 }

@@ -20,5 +20,5 @@
     <SolidColorBrush x:Key="SolidBrush_MiddleDarkGray" Color="#404040"/>
     <SolidColorBrush x:Key="SolidBrush_DarkGray" Color="#303030"/>
     <SolidColorBrush x:Key="SolidBrush_HighDarkGray" Color="#252525"/>
-    
+
 </ResourceDictionary>
