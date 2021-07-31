@@ -20,18 +20,26 @@ namespace EGISSOEditor_2._0.Models
             { 
                 Set(ref _directory, value);
                 OnPropertyChanged(nameof(Name));
+                OnPropertyChanged(nameof(Location));
             }
         }
 
         public string TemplateDirectory { get; }
 
         public string Name => Path.GetFileName(Directory);
+        public string Location => Path.GetDirectoryName(Directory);
+
+        public string Status => IsFileChanged == true ? "Изменен" : "Без изменений";
 
         private bool _isFileChanged;
         public bool IsFileChanged 
         {
             get => _isFileChanged;
-            set => Set(ref _isFileChanged, value);
+            set 
+            {
+                Set(ref _isFileChanged, value);
+                OnPropertyChanged(nameof(Status));
+            }
         }
 
         public EGISSOFile(int id, string directory, string templateDirectory)

@@ -1,24 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Extensions.DependencyInjection;
 using EGISSOEditor_2._0.Models;
 using EGISSOEditor_2._0.Services.Interfaces;
 using EGISSOEditor_2._0.Services.Enums;
 using System.Collections.Specialized;
-using System.Windows.Markup;
 
 namespace EGISSOEditor_2._0
 {
@@ -30,6 +20,8 @@ namespace EGISSOEditor_2._0
         private IFileRepository<EGISSOFile> Repository => App.Host.Services.GetRequiredService<IFileRepository<EGISSOFile>>();
         private IUserDialog UserDialog => App.Host.Services.GetRequiredService<IUserDialog>();
         private IRepositoryProcedureDialog<EGISSOFile> RepositoryDialog => App.Host.Services.GetRequiredService<IRepositoryProcedureDialog<EGISSOFile>>();
+
+        private DataTemplate _wrapDataTemplate, _listDataTemplate;
 
 
         public MainWindow()
@@ -69,8 +61,17 @@ namespace EGISSOEditor_2._0
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string[] files = ((string[])e.Data.GetData(DataFormats.FileDrop))
-                    .Where(i => i.EndsWith(".xlsx") || i.EndsWith(".xls") || i.EndsWith(".xlsm") || i.EndsWith(".xlsb")).ToArray();
+                List<string> addFiles = new List<string>(100);
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                string[] folders = files.Where(i => Directory.Exists(i)).ToArray();
+                addFiles.AddRange(files);
+
+                foreach (string folder in folders)
+                {
+                    files = Directory.GetFiles(folder, "*.xls");
+                    addFiles.AddRange(files);
+                }
+                files = addFiles.Where(i => i.EndsWith(".xlsx") || i.EndsWith(".xls") || i.EndsWith(".xlsm") || i.EndsWith(".xlsb")).ToArray();
                 await RepositoryDialog.AddWithShowProgressAsync(files);
             }
         }
@@ -86,6 +87,8 @@ namespace EGISSOEditor_2._0
             {
                 UpdateStatusFilesCount();
             };
+            _wrapDataTemplate = (DataTemplate)TryFindResource("WrapDateTemplate");
+            _listDataTemplate = (DataTemplate)TryFindResource("ListDateTemplate");
             ChangedListBoxStyle();
         }
 
@@ -102,28 +105,12 @@ namespace EGISSOEditor_2._0
 
         private void ChangedListBoxStyle()
         {
-            lbFiles.ItemTemplate = ToggleListStyle.IsChecked != true ? (DataTemplate)TryFindResource("WrapDateTemplate") :
-                (DataTemplate)TryFindResource("ListDateTemplate");
+            lbFiles.ItemTemplate = ToggleListStyle.IsChecked != true ? _wrapDataTemplate : _listDataTemplate;
 
-            ItemsPanelTemplate ipt = ToggleListStyle.IsChecked != true ?  GetWrapItemsPanelTemplate() : GetStackPanelItemsPanelTemplate();
+            Type panelType = ToggleListStyle.IsChecked != true ? typeof(WrapPanel) : typeof(VirtualizingStackPanel);
+            ItemsPanelTemplate ipt = new ItemsPanelTemplate(new FrameworkElementFactory(panelType));
            
             lbFiles.ItemsPanel = ipt;
-        }
-
-        private ItemsPanelTemplate GetWrapItemsPanelTemplate()
-        {
-            string xaml = @"<ItemsPanelTemplate   xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'>
-                                <WrapPanel/>
-                            </ItemsPanelTemplate>";
-            return XamlReader.Parse(xaml) as ItemsPanelTemplate;
-        }
-
-        private ItemsPanelTemplate GetStackPanelItemsPanelTemplate()
-        {
-            string xaml = @"<ItemsPanelTemplate   xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'>
-                                <VirtualizingStackPanel/>
-                            </ItemsPanelTemplate>";
-            return XamlReader.Parse(xaml) as ItemsPanelTemplate;
         }
     }
 }

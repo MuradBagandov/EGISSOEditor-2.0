@@ -13,6 +13,9 @@ using Microsoft.Win32;
 using System.Windows;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows.Data;
+using System.ComponentModel;
+using EGISSOEditor_2._0.Infrastuctures.Enums;
 
 namespace EGISSOEditor_2._0.ViewModels
 {
@@ -23,13 +26,12 @@ namespace EGISSOEditor_2._0.ViewModels
         private IEGISSOFileEditor<EGISSOFile> _EGISSOEditor;
         private IUserDialog _userDialog;
 
+        private CollectionViewSource _collectionFiles = new CollectionViewSource();
         #region Properties
 
-        #region Files : ObservableCollection<EGISSOFile>
-        public ObservableCollection<EGISSOFile> Files
-        {
-            get => _fileRepository.Items;
-        } 
+        #region Files : ICollectionView
+        public ICollectionView Files => _collectionFiles?.View;
+
         #endregion
 
         #region SelectedFiles : ObservableCollection<object>
@@ -39,7 +41,52 @@ namespace EGISSOEditor_2._0.ViewModels
         {
             get => _selectedFiles;
             set => Set(ref _selectedFiles, value);
-        } 
+        }
+        #endregion
+
+        #region CurrentGroupingTypes : GroupingTypes
+
+        private GroupingTypes _currentGroupingTypes = GroupingTypes.Location;
+
+        public GroupingTypes CurrentGroupingTypes
+        {
+            get => _currentGroupingTypes;
+            set 
+            {
+                if (Set(ref _currentGroupingTypes, value))
+                    UpdateGroupingDescriptionParametrs();
+            }
+        }
+        #endregion
+
+        #region CurrentSortingTypes : GroupingTypes
+
+        private SortingTypes _currentSortingTypes;
+
+        public SortingTypes CurrentSortingTypes
+        {
+            get => _currentSortingTypes;
+            set
+            {
+                if(Set(ref _currentSortingTypes, value))
+                    UpdateSortingDescriptionParametrs();
+            }
+        }
+        #endregion
+
+        #region SortDescending : bool
+
+        private bool _sortDescending;
+
+        public bool SortDescending
+        {
+            get => _sortDescending;
+            set
+            {
+                if (Set(ref _sortDescending, value))
+                    UpdateSortingDescriptionParametrs();
+            }
+        }
         #endregion
 
         #endregion
@@ -58,7 +105,11 @@ namespace EGISSOEditor_2._0.ViewModels
             };
 
             if (openDialog.ShowDialog() == true)
+            {
                 await _repositoryProcedureDialog.AddWithShowProgressAsync(openDialog.FileNames);
+                _collectionFiles.View.Refresh();
+            }
+                
         }
 
         #endregion
@@ -77,7 +128,7 @@ namespace EGISSOEditor_2._0.ViewModels
             else
                 await _repositoryProcedureDialog.RemoveAsync(itemsRemove, null, default);
         }
-            
+
 
         #endregion
 
@@ -85,10 +136,10 @@ namespace EGISSOEditor_2._0.ViewModels
 
         public ICommand RemoveFilesCommand { get; set; }
 
-        private bool CanRemoveFilesCommandExecute(object p) => Files?.Count > 0;
+        private bool CanRemoveFilesCommandExecute(object p) => _fileRepository?.Items?.Count > 0;
 
         private async void OnRemoveFilesCommandExecuted(object p)=>
-            await _repositoryProcedureDialog.RemoveWithShowProgressAsync(Files);
+            await _repositoryProcedureDialog.RemoveWithShowProgressAsync(_fileRepository.Items);
 
         #endregion
 
@@ -105,8 +156,10 @@ namespace EGISSOEditor_2._0.ViewModels
                 await _repositoryProcedureDialog.SaveWithShowProgressAsync(itemsSave);
             else
                 await _repositoryProcedureDialog.SaveAsync(itemsSave, null, default);
+            _collectionFiles.View.Refresh();
+
         }
-            
+
 
         #endregion
 
@@ -126,7 +179,10 @@ namespace EGISSOEditor_2._0.ViewModels
             };
 
             if (saveDialog.ShowDialog() == true)
+            {
                 _repositoryProcedureDialog.SaveAs(selectFile, saveDialog.FileName);
+                _collectionFiles.View.Refresh();
+            }
         }
 
         #endregion
@@ -135,10 +191,13 @@ namespace EGISSOEditor_2._0.ViewModels
 
         public ICommand SaveAllFileCommand { get; set; }
 
-        private bool CanSaveAllFileCommandExecute(object p) => Files.Count > 0;
+        private bool CanSaveAllFileCommandExecute(object p) => _fileRepository?.Items?.Count > 0;
 
-        private async void OnSaveAllFileCommandExecuted(object p)=> 
-            await _repositoryProcedureDialog.SaveWithShowProgressAsync(Files);
+        private async void OnSaveAllFileCommandExecuted(object p) 
+        {
+            await _repositoryProcedureDialog.SaveWithShowProgressAsync(_fileRepository.Items);
+            _collectionFiles.View.Refresh();
+        }
 
         #endregion
 
@@ -167,6 +226,8 @@ namespace EGISSOEditor_2._0.ViewModels
             finally
             {
                 close?.Invoke();
+                _collectionFiles.View.Refresh();
+
             }
         }
 
@@ -205,6 +266,8 @@ namespace EGISSOEditor_2._0.ViewModels
                 finally
                 {
                     close?.Invoke();
+                    _collectionFiles.View.Refresh();
+
                 }
             }
         }
@@ -234,6 +297,8 @@ namespace EGISSOEditor_2._0.ViewModels
             finally
             {
                 close?.Invoke();
+                _collectionFiles.View.Refresh();
+
             }
         }
 
@@ -260,6 +325,29 @@ namespace EGISSOEditor_2._0.ViewModels
             _repositoryProcedureDialog.Repository = _fileRepository;
             _EGISSOEditor = EGISSOEditor;
             _userDialog = userDialog;
+
+            UpdateGroupingDescriptionParametrs();
+            UpdateSortingDescriptionParametrs();
+            _collectionFiles.Source = _fileRepository.Items ?? null;
+        }
+
+        private void UpdateGroupingDescriptionParametrs()
+        {
+            _collectionFiles?.GroupDescriptions.Clear();
+            if (CurrentGroupingTypes == GroupingTypes.Location)
+                _collectionFiles?.GroupDescriptions.Add(new PropertyGroupDescription("Location"));
+            if (CurrentGroupingTypes == GroupingTypes.Status)
+                _collectionFiles?.GroupDescriptions.Add(new PropertyGroupDescription("Status"));
+        }
+
+        private void UpdateSortingDescriptionParametrs()
+        {
+            _collectionFiles?.SortDescriptions.Clear();
+            ListSortDirection sortDirection = SortDescending == true ? ListSortDirection.Descending : ListSortDirection.Ascending;
+            if (CurrentSortingTypes == SortingTypes.ByName)
+                _collectionFiles?.SortDescriptions.Add(new SortDescription(nameof(EGISSOFile.Name), sortDirection));
+            if (CurrentSortingTypes == SortingTypes.ByStatus)
+                _collectionFiles?.SortDescriptions.Add(new SortDescription(nameof(EGISSOFile.Status), sortDirection));
         }
     }
 }

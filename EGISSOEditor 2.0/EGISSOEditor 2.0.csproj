@@ -242,7 +242,11 @@
     <Compile Include="Infrastuctures\Commands\SelectAllCommand.cs" />
     <Compile Include="Infrastuctures\Convertors\Base\Convertor.cs" />
     <Compile Include="Infrastuctures\Convertors\Base\MultiConvertor.cs" />
+    <Compile Include="Infrastuctures\Convertors\EnumToCollectionConverter.cs" />
     <Compile Include="Infrastuctures\Convertors\Linear.cs" />
+    <Compile Include="Infrastuctures\Enums\EnumHelper.cs" />
+    <Compile Include="Infrastuctures\Enums\GroupingTypes.cs" />
+    <Compile Include="Infrastuctures\Enums\ValueDescription.cs" />
     <Compile Include="Models\EGISSOFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Resources\Styles\DarkTheme.xaml.cs">
