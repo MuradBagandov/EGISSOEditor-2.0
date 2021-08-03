@@ -18,14 +18,52 @@
         Height="500" Width="800" MinHeight="400" MinWidth="600"
         Closing="Window_Closing"
         Style="{DynamicResource CustomWindowStyle}" WindowStyle="None" WindowStartupLocation="Manual">
-
-    <Window.InputBindings>
-        <KeyBinding Key="A" Modifiers="Ctrl"  CommandParameter="{Binding ElementName=lbFiles}">
-            <KeyBinding.Command>
-                <cmd:SelectAllCommand/>
-            </KeyBinding.Command>
-        </KeyBinding>
-    </Window.InputBindings>
+    <Window.Resources>
+        <cmd:SelectAllCommand x:Key="SelectAllResouce" />
+        <ContextMenu x:Key="ContextMenu">
+            <MenuItem Header="Добавить файлы" Command="{Binding AddFileCommand}">
+                <MenuItem.Icon>
+                    <Image Source="../../Resources/Icons/File_add_3.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Сохранить файлы" Command="{Binding SaveFileCommand}">
+                <MenuItem.Icon>
+                    <Image Source="../../Resources/Icons/Save_2.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Сохранить все файлы" Command="{Binding SaveAllFileCommand}">
+                <MenuItem.Icon>
+                    <Image Source="../../Resources/Icons/Save_all_2.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Удалить файлы" Command="{Binding RemoveFileCommand}">
+                <MenuItem.Icon>
+                    <Image Source="../../Resources/Icons/File_remove_3.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Удалить все файлы" Command="{Binding RemoveFilesCommand}">
+                <MenuItem.Icon>
+                    <Image Source="../../Resources/Icons/File_remove_all_3.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator Margin="0" Opacity="0.5"/>
+            <MenuItem Header="Корректировать шаблон" Command="{Binding FilesStyleCorrectionCommand}">
+                <MenuItem.Icon>
+                    <Image Source="../../Resources/Icons/File_style_correction_2.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Проверка на ошибки" Command="{Binding ValidateFilesCommand}">
+                <MenuItem.Icon>
+                    <Image Source="../../Resources/Icons/File_Validate_2.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Объединить файлы" Command="{Binding MergingFilesCommand}">
+                <MenuItem.Icon>
+                    <Image Source="../../Resources/Icons/Combine_files_2.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </Window.Resources>
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
@@ -130,8 +168,9 @@
                                     SelectionChanged="lbFiles_SelectionChanged" Loaded="lbFiles_Loaded"
                                     VirtualizingPanel.IsVirtualizing="True" 
                                     VirtualizingPanel.IsContainerVirtualizable="True" 
-                                    VirtualizingPanel.VirtualizationMode="Recycling">
-                
+                                    VirtualizingPanel.VirtualizationMode="Recycling"
+                                    ContextMenu="{StaticResource ContextMenu}">
+
                 <controls:ListBoxCustom.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
