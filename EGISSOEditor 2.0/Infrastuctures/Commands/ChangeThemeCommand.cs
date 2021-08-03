@@ -13,7 +13,7 @@ namespace EGISSOEditor_2._0.Infrastuctures.Commands
 
         public override void Execute(object parameter)
         {
-            ThemeContoller.CurrentTheme = ThemeContoller.CurrentTheme == ThemeTypes.Dark ? ThemeTypes.Light : ThemeTypes.Dark;
+            ThemeContoller.CurrentTheme = ThemeContoller.CurrentTheme == ThemeType.Dark ? ThemeType.Light : ThemeType.Dark;
         }
     }
 }

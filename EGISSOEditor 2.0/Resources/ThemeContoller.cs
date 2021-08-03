@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace EGISSOEditor_2._0
 {
-    public enum ThemeTypes
+    public enum ThemeType
     {
         Light,
         Dark
@@ -15,13 +15,12 @@ namespace EGISSOEditor_2._0
 
     internal static class ThemeContoller
     {
-        private static ThemeTypes _currentTheme = ThemeTypes.Dark;
-        public static ThemeTypes CurrentTheme 
+        public static ThemeType CurrentTheme 
         {
-            get => _currentTheme;
+            get => ApplicationSettings.CurrentTheme;
             set
             {
-                _currentTheme = value;
+                ApplicationSettings.CurrentTheme = value;
                 ChangeTheme();
             }
         }
@@ -31,18 +30,14 @@ namespace EGISSOEditor_2._0
             string themeName = default;
             switch (CurrentTheme)
             {
-                case ThemeTypes.Dark: themeName = "DarkTheme"; break;
-                case ThemeTypes.Light: themeName = "LightTheme"; break;
-
+                case ThemeType.Dark: themeName = "DarkTheme"; break;
+                case ThemeType.Light: themeName = "LightTheme"; break;
             }
 
             Application.Current.Resources.MergedDictionaries[0] = new ResourceDictionary()
             {
                 Source = new Uri($"Resources/Styles/{themeName}.xaml", UriKind.Relative)
             };
-
-            Properties.Settings.Default.Theme = (byte)CurrentTheme;
-            Properties.Settings.Default.Save();
         }
     }
 }

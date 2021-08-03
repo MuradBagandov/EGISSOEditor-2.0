@@ -234,6 +234,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ApplicationSettings.cs" />
     <Compile Include="Controls\ListBoxCustom.cs" />
     <Compile Include="Infrastuctures\Commands\Base\Command.cs" />
     <Compile Include="Infrastuctures\Commands\ChangeThemeCommand.cs" />
@@ -245,7 +246,7 @@
     <Compile Include="Infrastuctures\Convertors\EnumToCollectionConverter.cs" />
     <Compile Include="Infrastuctures\Convertors\Linear.cs" />
     <Compile Include="Infrastuctures\Enums\EnumHelper.cs" />
-    <Compile Include="Infrastuctures\Enums\GroupingTypes.cs" />
+    <Compile Include="Infrastuctures\Enums\GroupingType.cs" />
     <Compile Include="Infrastuctures\Enums\ValueDescription.cs" />
     <Compile Include="Models\EGISSOFile.cs" />
     <Compile Include="Program.cs" />

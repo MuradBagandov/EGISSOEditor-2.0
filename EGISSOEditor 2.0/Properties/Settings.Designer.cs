@@ -70,5 +70,53 @@ namespace EGISSOEditor_2._0.Properties {
                 this["Theme"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public byte SortingType {
+            get {
+                return ((byte)(this["SortingType"]));
+            }
+            set {
+                this["SortingType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public byte GroupingType {
+            get {
+                return ((byte)(this["GroupingType"]));
+            }
+            set {
+                this["GroupingType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SortDescending {
+            get {
+                return ((bool)(this["SortDescending"]));
+            }
+            set {
+                this["SortDescending"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ListViewStyle {
+            get {
+                return ((bool)(this["ListViewStyle"]));
+            }
+            set {
+                this["ListViewStyle"] = value;
+            }
+        }
     }
 }

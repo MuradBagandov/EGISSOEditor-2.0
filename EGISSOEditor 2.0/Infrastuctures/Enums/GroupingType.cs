@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EGISSOEditor_2._0.Infrastuctures.Enums
 {
-    internal enum GroupingTypes
+    internal enum GroupingType
     {
         [Description("Без группировки")]
         NoGrouping,
@@ -17,7 +17,7 @@ namespace EGISSOEditor_2._0.Infrastuctures.Enums
         Status
     }
 
-    internal enum SortingTypes
+    internal enum SortingType
     {
         [Description("Без сортировки")]
         NoSorting,

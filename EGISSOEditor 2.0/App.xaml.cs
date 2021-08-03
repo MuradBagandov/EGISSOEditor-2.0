@@ -35,8 +35,7 @@ namespace EGISSOEditor_2._0
 
         protected override async void OnStartup(StartupEventArgs e)
         {
-
-            ThemeContoller.CurrentTheme = (ThemeTypes)EGISSOEditor_2._0.Properties.Settings.Default.Theme;
+            ThemeContoller.CurrentTheme = ApplicationSettings.CurrentTheme;
 
             base.OnStartup(e);
             IsDesignMode = false;
