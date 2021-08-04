@@ -23,22 +23,21 @@ namespace EGISSOEditor_2._0
 
         private DataTemplate _wrapDataTemplate, _listDataTemplate;
 
-
         public MainWindow()
         {
             InitializeComponent();
-            Width = Properties.Settings.Default.MainWindowSize.Width;
-            Height = Properties.Settings.Default.MainWindowSize.Height;
-            Top = Properties.Settings.Default.MainWindowStartupLocation.Height;
-            Left = Properties.Settings.Default.MainWindowStartupLocation.Width;
+            Width = ApplicationSettings.MainWindowSize.Width;
+            Height = ApplicationSettings.MainWindowSize.Height;
+            Top = ApplicationSettings.MainWindowStartupLocation.Height;
+            Left = ApplicationSettings.MainWindowStartupLocation.Width;
 
-            if (Properties.Settings.Default.MainWindowMaximized)
+            if (ApplicationSettings.IsMainWindowMaximized)
                 WindowState = WindowState.Maximized;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var items = Repository.Items.Where(i => i.IsFileChanged).ToList();
+            List<EGISSOFile> items = Repository.Items.Where(i => i.IsFileChanged).ToList();
 
             if (items.Count > 0)
             {
@@ -49,11 +48,9 @@ namespace EGISSOEditor_2._0
                     return;
                 }
             }
-            Properties.Settings.Default.MainWindowSize = new System.Drawing.Size((int)Width, (int)Height);
-            Properties.Settings.Default.MainWindowStartupLocation = new System.Drawing.Size((int)Left, (int)Top);
-            Properties.Settings.Default.MainWindowMaximized = WindowState == WindowState.Maximized;
-            Properties.Settings.Default.Save();
-
+            ApplicationSettings.MainWindowSize = new System.Drawing.Size((int)Width, (int)Height);
+            ApplicationSettings.MainWindowStartupLocation = new System.Drawing.Size((int)Left, (int)Top);
+            ApplicationSettings.IsMainWindowMaximized = WindowState == WindowState.Maximized;
             Repository.RemoveAll();
         }
 
@@ -106,10 +103,8 @@ namespace EGISSOEditor_2._0
         private void ChangedListBoxStyle()
         {
             lbFiles.ItemTemplate = ToggleListStyle.IsChecked != true ? _wrapDataTemplate : _listDataTemplate;
-
             Type panelType = ToggleListStyle.IsChecked != true ? typeof(WrapPanel) : typeof(VirtualizingStackPanel);
             ItemsPanelTemplate ipt = new ItemsPanelTemplate(new FrameworkElementFactory(panelType));
-           
             lbFiles.ItemsPanel = ipt;
         }
     }

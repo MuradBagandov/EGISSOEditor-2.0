@@ -197,7 +197,7 @@ namespace EGISSOEditor_2._0.Services
                     range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                     range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    range.Style.Fill.BackgroundColor.SetColor(255, 255, 255, 255);
+                    range.Style.Fill.BackgroundColor.SetColor(ExcelIndexedColor.Indexed1);
 
                     reporter.CurrentElementProgress = 0.4f;
                     cancel.ThrowIfCancellationRequested();
@@ -265,7 +265,8 @@ namespace EGISSOEditor_2._0.Services
                     ExcelWorksheet mainSheet = fileExcel.Workbook.Worksheets.FirstOrDefault();
                     countMainSheetRows = RecountRow(mainSheet);
                     var range = mainSheet.Cells[7, 1, countMainSheetRows + 6, 56];
-                    range.Style.Fill.SetBackground(ExcelIndexedColor.Indexed1);
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(ExcelIndexedColor.Indexed1);
 
                     float procesedvalidateItems = 0;
                     foreach (var validateItem in EGISSOValidationRules.ValidationRules)

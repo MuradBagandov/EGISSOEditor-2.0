@@ -25,8 +25,8 @@ namespace EGISSOEditor_2._0.ViewModels
         private IRepositoryProcedureDialog<EGISSOFile> _repositoryProcedureDialog;
         private IEGISSOFileEditor<EGISSOFile> _EGISSOEditor;
         private IUserDialog _userDialog;
-
         private CollectionViewSource _collectionFiles = new CollectionViewSource();
+
         #region Properties
 
         #region Files : ICollectionView
@@ -46,37 +46,43 @@ namespace EGISSOEditor_2._0.ViewModels
 
         #region CurrentGroupingTypes : GroupingTypes
 
-        private GroupingTypes _currentGroupingTypes = GroupingTypes.Location;
+        private GroupingType _currentGroupingTypes = ApplicationSettings.CurrentGroupingType;
 
-        public GroupingTypes CurrentGroupingTypes
+        public GroupingType CurrentGroupingTypes
         {
             get => _currentGroupingTypes;
             set 
             {
                 if (Set(ref _currentGroupingTypes, value))
+                {
                     UpdateGroupingDescriptionParametrs();
+                    ApplicationSettings.CurrentGroupingType = value;
+                }
             }
         }
         #endregion
 
         #region CurrentSortingTypes : GroupingTypes
 
-        private SortingTypes _currentSortingTypes;
+        private SortingType _currentSortingTypes = ApplicationSettings.CurrentSortingType;
 
-        public SortingTypes CurrentSortingTypes
+        public SortingType CurrentSortingTypes
         {
             get => _currentSortingTypes;
             set
             {
                 if(Set(ref _currentSortingTypes, value))
+                {
                     UpdateSortingDescriptionParametrs();
+                    ApplicationSettings.CurrentSortingType = value;
+                }
             }
         }
         #endregion
 
         #region SortDescending : bool
 
-        private bool _sortDescending;
+        private bool _sortDescending = ApplicationSettings.SortDescending;
 
         public bool SortDescending
         {
@@ -84,7 +90,27 @@ namespace EGISSOEditor_2._0.ViewModels
             set
             {
                 if (Set(ref _sortDescending, value))
+                {
                     UpdateSortingDescriptionParametrs();
+                    ApplicationSettings.SortDescending = value;
+                }
+            }
+        }
+        #endregion
+
+        #region ListViewStyle : bool
+
+        private bool _listViewStyle = ApplicationSettings.ListViewStyle;
+
+        public bool ListViewStyle
+        {
+            get => _listViewStyle;
+            set
+            {
+                if (Set(ref _listViewStyle, value))
+                {
+                    ApplicationSettings.ListViewStyle = value;
+                }
             }
         }
         #endregion
@@ -334,9 +360,9 @@ namespace EGISSOEditor_2._0.ViewModels
         private void UpdateGroupingDescriptionParametrs()
         {
             _collectionFiles?.GroupDescriptions.Clear();
-            if (CurrentGroupingTypes == GroupingTypes.Location)
+            if (CurrentGroupingTypes == GroupingType.Location)
                 _collectionFiles?.GroupDescriptions.Add(new PropertyGroupDescription("Location"));
-            if (CurrentGroupingTypes == GroupingTypes.Status)
+            if (CurrentGroupingTypes == GroupingType.Status)
                 _collectionFiles?.GroupDescriptions.Add(new PropertyGroupDescription("Status"));
         }
 
@@ -344,9 +370,9 @@ namespace EGISSOEditor_2._0.ViewModels
         {
             _collectionFiles?.SortDescriptions.Clear();
             ListSortDirection sortDirection = SortDescending == true ? ListSortDirection.Descending : ListSortDirection.Ascending;
-            if (CurrentSortingTypes == SortingTypes.ByName)
+            if (CurrentSortingTypes == SortingType.ByName)
                 _collectionFiles?.SortDescriptions.Add(new SortDescription(nameof(EGISSOFile.Name), sortDirection));
-            if (CurrentSortingTypes == SortingTypes.ByStatus)
+            if (CurrentSortingTypes == SortingType.ByStatus)
                 _collectionFiles?.SortDescriptions.Add(new SortDescription(nameof(EGISSOFile.Status), sortDirection));
         }
     }

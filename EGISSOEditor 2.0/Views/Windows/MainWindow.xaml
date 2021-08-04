@@ -148,7 +148,7 @@
                           DisplayMemberPath="Description"
                           SelectedValue="{Binding CurrentGroupingTypes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
-                <ToggleButton x:Name="ToggleListStyle" Click="ToggleButton_Click" IsChecked="True" Width="30" Margin="1,0,0,0">
+                <ToggleButton x:Name="ToggleListStyle" Click="ToggleButton_Click" IsChecked="{Binding ListViewStyle}" Width="30" Margin="1,0,0,0">
                     <fa:ImageAwesome Icon="ListUl" Margin="4"/>
                 </ToggleButton>
             </StackPanel>
