@@ -322,14 +322,32 @@ namespace EGISSOEditor_2._0.Services
         private int RecountRow(ExcelWorksheet sheet)
         {
             int countRows = 0;
+            int countEmptyRows = 0;
+            bool lastRowIsEmpty = false;
+
             while (true)
             {
                 object value = sheet.Cells[countRows + 7, 1].Value;
                 if (value == null)
                 {
                     if (isRowEmpty(countRows + 7))
-                        break;
+                    {
+                        countEmptyRows++;
+                        lastRowIsEmpty = true;
+                        if (countEmptyRows > 10)
+                        {
+                            countRows -= countEmptyRows - 1;
+                            break;
+                        }
+                    }
+                    else
+                        lastRowIsEmpty = false;
                 }
+                else
+                    lastRowIsEmpty = false;
+
+                if (!lastRowIsEmpty)
+                    countEmptyRows = 0;
 
                 countRows++;
             }

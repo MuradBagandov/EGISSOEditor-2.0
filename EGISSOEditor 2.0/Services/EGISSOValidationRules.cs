@@ -1,6 +1,7 @@
 ﻿using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -50,24 +51,33 @@ namespace EGISSOEditor_2._0.Services
             {
                 BeforeValidationAction = (a)=>a.Cell.Value = (a.IndexRow-6).ToString()
             },
-            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "9796.00001"), 2)
+            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "9796.000001"), 2)
             {
-                CorrectIfValidateIsInvalid = (a) => { a.Cell.Value = "9796.00001"; return true; }
+                CorrectIfValidateIsInvalid = (a) => { a.Cell.Value = "9796.000001"; return true; }
             },
             new ValidateRule((a) => a.Value is string str && CheckSNILS(str), 3,17)
             {
                 BeforeValidationAction = SNILSCorrection
             },
-            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "^[А-яЁё\\s\\-]{1,100}$"), 4,5,18,19),
-            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "(^[А-яЁё\\s\\-]{1,100}$)|^$"), 6,20),
+            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "^[А-яЁё\\s\\-]{1,100}$"), 4,5,18,19)
+            {
+                BeforeValidationAction = TrimStringCorrection
+            },
+            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "(^[А-яЁё\\s\\-]{1,100}$)|^$"), 6,20)
+            {
+                BeforeValidationAction = TrimStringCorrection
+            },
             new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "(^Female$|^Male$)"), 7,21)
             {
-                BeforeValidationAction = ReplaceSpaceCorrection
+                BeforeValidationAction = (a)=> { ReplaceSpaceCorrection(a); TrimStringCorrection(a); GenderCaseCorrection(a); }
             },
             new ValidateRule(DateValidate, 8, 22, 33, 34, 35),
-            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "([а-яА-ЯёЁ\\-0-9№(][а-яА-ЯёЁ\\-\\s',.0-9()№\"\\\\/]{1,499})|^$"), 9,23),
+            new ValidateRule((a) => a.Value is string str && Regex.IsMatch(str, "^([а-яА-ЯёЁ\\-0-9№(][а-яА-ЯёЁ\\-\\s',.0-9()№\"\\\\/]{1,499})$|^$"), 9,23)
+            {
+                BeforeValidationAction = TrimStringCorrection
+            },
             new ValidateRule((a) => Regex.IsMatch(ConvertObjectDoubleToString(a.Value), "(^\\d{8,11}$)|^$"), 10,24),
-            new ValidateRule((a) => Regex.IsMatch(ConvertObjectDoubleToString(a.Value), "(^\\d{1,3}$)|^$"), 11,25)
+            new ValidateRule((a) => Regex.IsMatch(ConvertObjectDoubleToString(a.Value), "(^643$)|^$"), 11,25)
             {
                 BeforeValidationAction = ReplaceSpaceCorrection
             },
@@ -80,7 +90,7 @@ namespace EGISSOEditor_2._0.Services
                 BeforeValidationAction = ReplaceSpaceCorrection,
                 CorrectIfValidateIsInvalid = (a)=> {a.Cell.Value = "0"; return true; }
             },
-            new ValidateRule((a)=>Regex.IsMatch(ConvertObjectDoubleToString(a.Value), "^[1-8]{1}$"), 12,26)
+            new ValidateRule((a)=>Regex.IsMatch(ConvertObjectDoubleToString(a.Value), "^[1-8]{1}$|^$"), 12,26)
             {
                 BeforeValidationAction = ReplaceSpaceCorrection
             },
@@ -96,7 +106,11 @@ namespace EGISSOEditor_2._0.Services
             {
                 BeforeValidationAction = ReplaceSpaceCorrection
             },
-            new ValidateRule(IdentityDocIssuerValidate, 16,30)
+            new ValidateRule(IdentityDocIssuerValidate, 16, 30)
+            {
+                BeforeValidationAction = TrimStringCorrection
+            },
+            new ValidateRule(AmountsValidate, 38,44,50,56)
         };
 
         private static void SNILSCorrection(ValidateArgs v)
@@ -109,11 +123,22 @@ namespace EGISSOEditor_2._0.Services
             }
         }
 
+        private static void GenderCaseCorrection(ValidateArgs v)
+        {
+            if (v.Cell is ExcelRange cell && cell.Value is string str)
+                cell.Value = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(str); ;
+        }
+
         private static void ReplaceSpaceCorrection(ValidateArgs v)
         {
-            
             if (v.Cell is ExcelRange cell && cell.Value is string str)
                 cell.Value = str.Replace(" ", "");
+        }
+
+        private static void TrimStringCorrection(ValidateArgs v)
+        {
+            if (v.Cell is ExcelRange cell && cell.Value is string str)
+                cell.Value = str.Trim();
         }
 
         private static string ConvertObjectDoubleToString(object v)
@@ -127,11 +152,18 @@ namespace EGISSOEditor_2._0.Services
 
         private static bool DateValidate(ValidateArgs a)
         {
-            if (a.Value is DateTime)
-                return true;
+            if (a.Value is DateTime date)
+                return date < DateTime.Now.AddYears(1) && date > new DateTime(1910, 1, 1);
             if (a.Value is string strValue)
-                return Regex.IsMatch(strValue, @"((0[1-9]|[12]\d)\.(0[1-9]|1[012])|30\.(0[13-9]|1[012])|31\.(0[13578]|1[02]))\.(19|20)\d\d");
+                return Regex.IsMatch(strValue, @"^((0[1-9]|[12]\d)\.(0[1-9]|1[012])|30\.(0[13-9]|1[012])|31\.(0[13578]|1[02]))\.(19|20)\d\d$");
             return false;
+        }
+
+        private static bool AmountsValidate(ValidateArgs a)
+        {
+            if (a.Cell.Value is string str && str == "")
+                return true;
+            return a.Cell.Style.Numberformat.NumFmtID == 2 && a.Cell.Value is double;
         }
 
         private static bool IdentityDocSeriesValidate(ValidateArgs a)
@@ -150,14 +182,15 @@ namespace EGISSOEditor_2._0.Services
                 case "1": patternValidate = "^\\d{4}$"; strValue = strValue.PadLeft(4, '0'); rewriteValue = true; break;
                 case "2": patternValidate = "^.{1,20}$"; break;
                 case "3": patternValidate = "^\\d{2}$"; break;
-                case "4": patternValidate = "^[А-Я]{2}&"; break;
+                case "4": patternValidate = "^[А-Я]{2}$"; break;
                 case "5": patternValidate = "^[IVXLCDM]{1,4}[\\-][А-Я]{2}$"; break;
-                case "": patternValidate = "^&"; break;
+                case "": patternValidate = "^$"; break;
                 default: return true;
             }
             if (rewriteValue)
                 a.Cell.Value = strValue;
-            return Regex.IsMatch(strValue, patternValidate);
+            var result = Regex.IsMatch(strValue, patternValidate);
+            return result;
         }
 
         private static bool IdentityDocNumberValidate(ValidateArgs a)
@@ -178,7 +211,7 @@ namespace EGISSOEditor_2._0.Services
                 case "3": patternValidate = "^\\d{7}$"; strValue = strValue.PadLeft(7, '0'); rewriteValue = true; break;
                 case "4": patternValidate = "^\\d{7}&"; strValue = strValue.PadLeft(7, '0'); rewriteValue = true; break;
                 case "5": patternValidate = "^\\d{6}$"; strValue = strValue.PadLeft(6, '0'); rewriteValue = true; break;
-                case "": patternValidate = "^&"; break;
+                case "": patternValidate = "^$"; break;
                 default: return true;
             }
             if (rewriteValue)
@@ -193,7 +226,7 @@ namespace EGISSOEditor_2._0.Services
 
             bool hasDate = a.Value is DateTime;
             if (!hasDate && a.Value is string strValue)
-                hasDate = Regex.IsMatch(strValue, @"((0[1-9]|[12]\d)\.(0[1-9]|1[012])|30\.(0[13-9]|1[012])|31\.(0[13578]|1[02]))\.(19|20)\d\d");
+                hasDate = Regex.IsMatch(strValue, @"^((0[1-9]|[12]\d)\.(0[1-9]|1[012])|30\.(0[13-9]|1[012])|31\.(0[13578]|1[02]))\.(19|20)\d\d$");
 
             if (string.IsNullOrEmpty(strIdentityDocType) && hasDate)
                 return false;
@@ -209,12 +242,12 @@ namespace EGISSOEditor_2._0.Services
 
             if (a.Value is string strValue)
             {
-                return !string.IsNullOrEmpty(strIdentityDocType) && Regex.IsMatch(strValue, "[а-яА-ЯёЁ\\-0-9№(][а-яА-ЯёЁ\\-\\s',.0-9()№\"\\\\/]{1,499}");
+                if (string.IsNullOrEmpty(strValue))
+                    return string.IsNullOrEmpty(strIdentityDocType);
+                bool result = Regex.IsMatch(strValue, "^[а-яА-ЯёЁ\\-0-9№(][а-яА-ЯёЁ\\-\\s',.0-9()№\"\\\\/]{1,499}$");
+                return !string.IsNullOrEmpty(strIdentityDocType) && result;
             }
-            else
-            {
-                return a.Value == null && string.IsNullOrEmpty(strIdentityDocType);
-            }
+            return false;
         }
 
         private static bool CheckSNILS(string value)
